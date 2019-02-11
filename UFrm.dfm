@@ -345,7 +345,9 @@ object Frm: TFrm
     Top = 48
     Width = 76
     Height = 17
-    Caption = '<a href="https://github.com/digao-dalpiaz">Dig'#227'o Dalpiaz</a>'
+    Caption = 
+      '<a href="https://github.com/digao-dalpiaz/CompInstall">Dig'#227'o Dal' +
+      'piaz</a>'
     TabOrder = 1
     OnLinkClick = LinkLabel1LinkClick
   end
