@@ -10,6 +10,8 @@ You need only to create a Ini file called CompInstall.ini and write parameters t
 
 Then put the CompInstall.exe and CompInstall.ini into your component package directory and be happy.
 
+> Note: This app requires MSBUILD, which is present at .NET Framework 2.0, 3.5 and 4.0. When the app launch, it will verify if any MSBUILD is available.
+
 ## CompInstall.ini structure
 
 **`[General]` section**
