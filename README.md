@@ -39,3 +39,5 @@ This option needs the General section `Allow64bit` enabled!
 `PublishFiles` (optional) = It's a list splited by ";" with all files you want to copy into release foldes (usually DFM form files used at runtime and resource files).
 
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
+
+**Check my Delphi components here at GitHub and find CompInstall.ini file to see usage examples.**
