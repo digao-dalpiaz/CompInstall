@@ -4,7 +4,7 @@
 
 ![App Print](images/print.png)
 
-This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE.
+This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
 
 You need only to create a Ini file called CompInstall.ini and write parameters to the app.
 
