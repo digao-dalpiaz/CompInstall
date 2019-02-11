@@ -5,7 +5,7 @@ object Frm: TFrm
   BorderStyle = bsSingle
   Caption = 'Component Installer'
   ClientHeight = 455
-  ClientWidth = 569
+  ClientWidth = 665
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -40,8 +40,8 @@ object Frm: TFrm
     Caption = 'Installation Log'
   end
   object LbVersion: TLabel
-    Left = 424
-    Top = 24
+    Left = 528
+    Top = 16
     Width = 123
     Height = 13
     Caption = 'Component Installer 1.0'
@@ -55,7 +55,7 @@ object Frm: TFrm
   object EdCompName: TEdit
     Left = 16
     Top = 32
-    Width = 329
+    Width = 433
     Height = 21
     TabStop = False
     Color = clBtnFace
@@ -87,7 +87,7 @@ object Frm: TFrm
     TabOrder = 3
   end
   object BtnInstall: TBitBtn
-    Left = 176
+    Left = 224
     Top = 408
     Width = 105
     Height = 33
@@ -208,7 +208,7 @@ object Frm: TFrm
     OnClick = BtnInstallClick
   end
   object BtnExit: TBitBtn
-    Left = 288
+    Left = 336
     Top = 408
     Width = 105
     Height = 33
@@ -331,7 +331,7 @@ object Frm: TFrm
   object M: TRichEdit
     Left = 16
     Top = 128
-    Width = 537
+    Width = 633
     Height = 265
     TabStop = False
     HideScrollBars = False
@@ -341,8 +341,8 @@ object Frm: TFrm
     Zoom = 100
   end
   object LinkLabel1: TLinkLabel
-    Left = 472
-    Top = 48
+    Left = 576
+    Top = 40
     Width = 76
     Height = 17
     Caption = 

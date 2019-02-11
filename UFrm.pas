@@ -91,7 +91,7 @@ begin
 
   M.SelText := A+#13#10;
 
-  SendMessage(M.Handle, WM_VSCROLL, SB_BOTTOM, 0);
+  SendMessage(M.Handle, WM_VSCROLL, SB_BOTTOM, 0); //scroll to bottom
 
   //M.SelStart := Length(M.Text);
 end;
