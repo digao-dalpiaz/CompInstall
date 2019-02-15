@@ -5,7 +5,7 @@ interface
 uses Vcl.Forms, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons,
   Vcl.Controls, System.Classes,
   //
-  System.IniFiles, Vcl.Graphics;
+  Vcl.Graphics, UDefinitions;
 
 type
   TFrm = class(TForm)
@@ -28,19 +28,21 @@ type
       LinkType: TSysLinkType);
   private
     AppDir: String;
-    Ini: TIniFile;
     InternalDelphiVersionKey: String;
     MSBuild_Dir: String;
 
+    D: TDefinitions;
+
     procedure Compile;
-    procedure CompilePackage(const aBat, aPackage, aPlatform: String);
+    procedure CompilePackage(P: TPackage; const aBat, aPlatform: String);
     procedure LoadDelphiVersions;
     procedure AddLibrary;
     procedure Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
-    procedure PublishFiles(const aPlatform, aFiles: String);
+    procedure PublishFiles(P: TPackage; const aPlatform: String);
     procedure RegisterBPL(const aPackage: String);
     procedure OnLine(const Text: String);
     procedure FindMSBuild;
+    function Is64bit_Set: Boolean;
   end;
 
 var
@@ -64,22 +66,22 @@ end;
 //--
 
 function HasInList(const Item, List: String): Boolean;
+const SEP = ';';
 begin
-  Result := Pos(';'+Item+';', ';'+List+';')>0;
-end;
-
-function PVToEnter(const A: String): String;
-begin
-  Result := StringReplace(A, ';', #13#10, [rfReplaceAll]);
+  //returns if Item is contained in the List splited by SEP character
+  Result := Pos(SEP+Item+SEP, SEP+List+SEP)>0;
 end;
 
 function AddBarDir(const Dir: String): String;
 begin
+  //just a smaller function shortcut
   Result := IncludeTrailingPathDelimiter(Dir);
 end;
 
 procedure TFrm.Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
 begin
+  //log text at RichEdit control, with some formatted rules
+
   M.SelStart := Length(M.Text);
 
   if bBold then
@@ -92,30 +94,23 @@ begin
   M.SelText := A+#13#10;
 
   SendMessage(M.Handle, WM_VSCROLL, SB_BOTTOM, 0); //scroll to bottom
-
-  //M.SelStart := Length(M.Text);
 end;
 
 procedure TFrm.FormCreate(Sender: TObject);
-var aIniArq: String;
 begin
   AppDir := ExtractFilePath(Application.ExeName);
-  aIniArq := AppDir+'CompInstall.ini';
+
+  D := TDefinitions.Create;
   try
-    if not FileExists(aIniArq) then
-      raise Exception.Create('Ini file not found');
+    D.LoadIniFile(AppDir+'CompInstall.ini');
 
-    Ini := TIniFile.Create(aIniArq);
-
-    EdCompName.Text := Ini.ReadString('General', 'Name', '');
-    if EdCompName.Text='' then
-      raise Exception.Create('Component name not specifyed at ini file');
-
-    Ck64bit.Visible := Ini.ReadBool('General', 'Allow64bit', False);
+    EdCompName.Text := D.CompName;
 
     LoadDelphiVersions; //load list of delphi versions
 
-    FindMSBuild;
+    Ck64bit.Visible := D.HasAny64bit;
+
+    FindMSBuild; //find MSBUILD.EXE to use for compilation
 
   except
     BtnInstall.Enabled := False;
@@ -126,7 +121,7 @@ end;
 procedure TFrm.FormDestroy(Sender: TObject);
 var I: Integer;
 begin
-  if Assigned(Ini) then Ini.Free;
+  D.Free;
 
   //--Free objects of delphi versions list
   for I := 0 to EdDV.Items.Count-1 do
@@ -145,14 +140,18 @@ begin
   Close;
 end;
 
+function TFrm.Is64bit_Set: Boolean;
+begin
+  Result := Ck64bit.Checked and Ck64bit.Visible;
+end;
+
 procedure TFrm.LoadDelphiVersions;
 var R: TRegistry;
-  aAllowedVersions: String;
 
   procedure Add(const Key, IniVer, Text: String);
   var DV: TDelphiVersion;
   begin
-    if R.KeyExists(Key) and HasInList(IniVer, aAllowedVersions) then
+    if R.KeyExists(Key) and HasInList(IniVer, D.DelphiVersions) then
     begin
       DV := TDelphiVersion.Create;
       DV.InternalNumber := Key;
@@ -161,10 +160,6 @@ var R: TRegistry;
   end;
 
 begin
-  aAllowedVersions := Ini.ReadString('General', 'DelphiVersions', ''); //list splited by ";"
-  if aAllowedVersions='' then
-    raise Exception.Create('No Delphi version specifyed at ini file');
-
   R := TRegistry.Create;
   try
     R.RootKey := HKEY_CURRENT_USER;
@@ -226,8 +221,8 @@ begin
     Log('COMPILE COMPONENT...');
     Compile;
 
-    if Ini.ReadBool('General', 'AddLibrary', False) then
-      AddLibrary;
+    if D.AddLibrary then
+      AddLibrary; //add library paths to Delphi
 
     Log('COMPONENT INSTALLED!', True, clGreen);
   except
@@ -242,20 +237,20 @@ end;
 procedure TFrm.Compile;
 var R: TRegistry;
   aRootDir: String;
-  aBat, aPac, aSec, aPubFiles: String;
+  aBat: String;
 
-  S: TStringList;
+  P: TPackage;
 begin
   R := TRegistry.Create;
   try
     R.RootKey := HKEY_CURRENT_USER;
     if not R.OpenKeyReadOnly(BDS_KEY+'\'+InternalDelphiVersionKey) then
-      raise Exception.Create('Main Registry of delphi version not found');
+      raise Exception.Create('Main registry of Delphi version not found');
 
     aRootDir := R.ReadString('RootDir');
 
     if aRootDir='' then
-      raise Exception.Create('Can not get Delphi Root Folder');
+      raise Exception.Create('Unable to get Delphi root folder');
 
   finally
     R.Free;
@@ -266,44 +261,25 @@ begin
 
   aBat := AddBarDir(aRootDir)+'bin\rsvars.bat';
   if not FileExists(aBat) then
-    raise Exception.Create('Internal Delphi Batch file "rsvars" not found');
+    raise Exception.Create('Internal Delphi batch file "rsvars" not found');
 
-  S := TStringList.Create;
-  try
-    S.Text := PVToEnter(Ini.ReadString('General', 'Packages', ''));
+  for P in D.Packages do
+  begin
+      CompilePackage(P, aBat, 'Win32');
 
-    if S.Count=0 then
-      raise Exception.Create('No package found in the Ini file');
+      if Is64bit_Set and P.Allow64bit then
+        CompilePackage(P, aBat, 'Win64');
 
-    for aPac in S do
-    begin
-      aSec := 'P_'+aPac; //section of package in the ini file
-
-      aPubFiles := Ini.ReadString(aSec, 'PublishFiles', ''); //list of files to publish
-
-      CompilePackage(aBat, aPac, 'Win32');
-      PublishFiles('Win32', aPubFiles);
-
-      if Ck64bit.Visible and Ck64bit.Checked then
-        if Ini.ReadBool(aSec, 'Allow64bit', False) then
-      begin
-        CompilePackage(aBat, aPac, 'Win64');
-        PublishFiles('Win64', aPubFiles);
-      end;
-
-      if Ini.ReadBool(aSec, 'Install', False) then
-        RegisterBPL(aPac);
-    end;
-  finally
-    S.Free;
+      if P.Install then
+        RegisterBPL(P.Name);
   end;
 end;
 
-procedure TFrm.CompilePackage(const aBat, aPackage, aPlatform: String);
+procedure TFrm.CompilePackage(P: TPackage; const aBat, aPlatform: String);
 var C: TCmdExecBuffer;
   MSBuildExe: String;
 begin
-  Log('Compile package '+aPackage+' ('+aPlatform+')');
+  Log('Compile package '+P.Name+' ('+aPlatform+')');
 
   MSBuildExe := AddBarDir(MSBuild_Dir)+'MSBUILD.EXE';
 
@@ -313,7 +289,7 @@ begin
 
     C.CommandLine :=
       Format('%s & "%s" "%s.dproj" /t:build /p:config=Release /p:platform=%s',
-      [aBat, MSBuildExe, AppDir+aPackage, aPlatform]);
+      [aBat, MSBuildExe, AppDir+P.Name, aPlatform]);
 
     C.WorkDir := AppDir;
 
@@ -321,16 +297,20 @@ begin
       raise Exception.Create('Could not execute MSBUILD');
 
     if C.ExitCode<>0 then
-      raise Exception.CreateFmt('Error compiling package %s (Exit Code %d)', [aPackage, C.ExitCode]);
+      raise Exception.CreateFmt('Error compiling package %s (Exit Code %d)', [P.Name, C.ExitCode]);
   finally
     C.Free;
   end;
+
+  //publish files
+  PublishFiles(P, aPlatform);
 
   Log('');
 end;
 
 procedure TFrm.OnLine(const Text: String);
 begin
+  //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
 end;
 
@@ -351,7 +331,7 @@ procedure TFrm.AddLibrary;
       R.RootKey := HKEY_CURRENT_USER;
 
       if not R.OpenKey(Key, False) then
-        raise Exception.Create('Registry key for Library '+aPlatform+' not found');
+        raise Exception.Create('Registry key for library '+aPlatform+' not found');
 
       A := R.ReadString(SEARCH_KEY);
       if not HasInList(Dir, A) then
@@ -365,7 +345,7 @@ procedure TFrm.AddLibrary;
 begin
   AddKey('Win32');
 
-  if Ck64bit.Visible and Ck64bit.Checked then
+  if Is64bit_Set then
     AddKey('Win64');
 end;
 
@@ -393,32 +373,23 @@ begin
     if not R.OpenKey(BDS_KEY+'\'+InternalDelphiVersionKey+'\Known Packages', False) then
       raise Exception.Create('Know Packages registry section not found');
 
-    R.WriteString(AddBarDir(BplDir)+aPackage+'.bpl', EdCompName.Text);
+    R.WriteString(AddBarDir(BplDir)+aPackage+'.bpl', D.CompName);
 
   finally
     R.Free;
   end;
 end;
 
-procedure TFrm.PublishFiles(const aPlatform, aFiles: String);
-var S: TStringList;
-  A, aSource, aDest: String;
+procedure TFrm.PublishFiles(P: TPackage; const aPlatform: String);
+var A, aSource, aDest: String;
 begin
-  S := TStringList.Create;
-  try
-    S.Text := PVToEnter(aFiles);
+  for A in P.PublishFiles do
+  begin
+    aSource := AppDir+A;
+    aDest := AppDir+aPlatform+'\Release\'+A;
 
-    for A in S do
-    begin
-      aSource := AppDir+A;
-      aDest := AppDir+aPlatform+'\Release\'+A;
-
-      Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False);
-      TFile.Copy(aSource, aDest, True);
-    end;
-
-  finally
-    S.Free;
+    Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False);
+    TFile.Copy(aSource, aDest, True);
   end;
 end;
 
@@ -446,10 +417,10 @@ begin
       if S.Count=0 then
         raise Exception.Create('There is no .NET Framework version available');
 
-      S.Sort;
+      S.Sort; //sort msbuild versions
 
       Found := False;
-      for I := S.Count-1 downto 0 do
+      for I := S.Count-1 downto 0 do //iterate versions from last to first
       begin
         if not R.OpenKeyReadOnly(TOOLS_KEY+'\'+S[I]) then
           raise Exception.Create('Internal error on reading .NET version key');

@@ -2,7 +2,9 @@ program CompInstall;
 
 uses
   Vcl.Forms,
-  UFrm in 'UFrm.pas' {Frm};
+  UFrm in 'UFrm.pas' {Frm},
+  UCmdExecBuffer in 'UCmdExecBuffer.pas',
+  UDefinitions in 'UDefinitions.pas';
 
 {$R *.res}
 

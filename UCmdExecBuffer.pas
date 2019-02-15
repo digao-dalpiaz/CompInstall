@@ -2,19 +2,22 @@ unit UCmdExecBuffer;
 
 interface
 
+{The TCmdExecBuffer class executes command line programs in cmd.exe
+and allows to retrieve line by line output using OnLine event.}
+
 type
   TCmdExecBufferEvLine = procedure(const Text: String) of object;
 
   TCmdExecBuffer = class
   public
-    OnLine: TCmdExecBufferEvLine;
-    
+    OnLine: TCmdExecBufferEvLine; //event to retrieve line by line output
+
     CommandLine: String;
     WorkDir: String;
 
-    Lines: String;
+    Lines: String; //all output lines
     ExitCode: Cardinal;
-    function Exec: Boolean;
+    function Exec: Boolean; //function to execute the program
   end;
 
 implementation
