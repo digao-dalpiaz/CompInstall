@@ -29,7 +29,7 @@ type
   private
     AppDir: String;
     InternalDelphiVersionKey: String;
-    MSBuild_Dir: String;
+    MSBuildExe: String;
 
     D: TDefinitions;
 
@@ -277,11 +277,8 @@ end;
 
 procedure TFrm.CompilePackage(P: TPackage; const aBat, aPlatform: String);
 var C: TCmdExecBuffer;
-  MSBuildExe: String;
 begin
   Log('Compile package '+P.Name+' ('+aPlatform+')');
-
-  MSBuildExe := AddBarDir(MSBuild_Dir)+'MSBUILD.EXE';
 
   C := TCmdExecBuffer.Create;
   try
@@ -312,6 +309,19 @@ procedure TFrm.OnLine(const Text: String);
 begin
   //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
+end;
+
+procedure TFrm.PublishFiles(P: TPackage; const aPlatform: String);
+var A, aSource, aDest: String;
+begin
+  for A in P.PublishFiles do
+  begin
+    aSource := AppDir+A;
+    aDest := AppDir+aPlatform+'\Release\'+A;
+
+    Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False, clPurple);
+    TFile.Copy(aSource, aDest, True);
+  end;
 end;
 
 procedure TFrm.AddLibrary;
@@ -380,24 +390,11 @@ begin
   end;
 end;
 
-procedure TFrm.PublishFiles(P: TPackage; const aPlatform: String);
-var A, aSource, aDest: String;
-begin
-  for A in P.PublishFiles do
-  begin
-    aSource := AppDir+A;
-    aDest := AppDir+aPlatform+'\Release\'+A;
-
-    Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False);
-    TFile.Copy(aSource, aDest, True);
-  end;
-end;
-
 procedure TFrm.FindMSBuild;
 var R: TRegistry;
   S: TStringList;
   I: Integer;
-  Dir: String;
+  Dir, aFile: String;
   Found: Boolean;
 const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
 begin
@@ -430,7 +427,8 @@ begin
 
         if Dir<>'' then
         begin
-          if FileExists(AddBarDir(Dir)+'MSBUILD.EXE') then
+          aFile := AddBarDir(Dir)+'MSBUILD.EXE';
+          if FileExists(aFile) then
           begin
             //msbuild found
             Found := True;
@@ -450,9 +448,7 @@ begin
   if not Found then
     raise Exception.Create('MSBUILD not found in any .NET Framework version');
 
-  MSBuild_Dir := Dir;
-
-  //Log('MSBUILD path: '+MSBuild_Dir);
+  MSBuildExe := aFile;
 end;
 
 end.

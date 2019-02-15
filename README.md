@@ -12,6 +12,12 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 > Note: This app requires MSBUILD, which is present at .NET Framework 2.0, 3.5 and 4.0. When the app launch, it will verify if any MSBUILD is available.
 
+## What's New
+
+- 02/15/2019 (Version 1.1)
+
+   - Removed Allow64bit parameter in the General section. The app will detect this parameter automatically when appears at any package parameter.
+
 ## CompInstall.ini structure
 
 **`[General]` section**
