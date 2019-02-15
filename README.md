@@ -18,8 +18,6 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 `Name` (required) = Component name displayed at install form and registered into Delphi Packages.
 
-`Allow64bit` (optional) = 0 or 1. When 1, it will be display a checkbox allowing install 64-bit version of component (the checkbox starts checked by default).
-
 `DelphiVersions` (required) = It's a list splited by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
 
 > Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
@@ -36,7 +34,7 @@ To specify package parameters, create a section with the name of the package wit
 
 `Allow64bit` (optional) = 0 or 1. When 1, specify this package to be compiled twice, with 32-bit and 64-bit versions. Remember to create this platform at Delphi Project Manager, otherwise the 64-bit compilation will fail.
 
-This option needs the General section `Allow64bit` enabled!
+If any package has this option enabled, it will be display a checkbox allowing install 64-bit version of component (the checkbox starts checked by default).
 
 `PublishFiles` (optional) = It's a list splited by ";" with all files you want to copy into release foldes (usually DFM form files used at runtime and resource files).
 
