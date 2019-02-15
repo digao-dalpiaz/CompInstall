@@ -46,4 +46,6 @@ If any package has this option enabled, it will be display a checkbox allowing i
 
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
 
+>Note: The app compile your component using **Release** target. This means all packages need to be configured at default output folder (Win32\Release and Win64\Release).
+
 **Check my Delphi components here at GitHub and find CompInstall.ini file to see usage examples.**
