@@ -6,7 +6,7 @@
 
 This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
 
-You need only to create a Ini file called **CompInstall.ini** and write parameters to the app.
+You need only to create an Ini file called **CompInstall.ini** and write parameters to the app.
 
 Then put the **CompInstall.exe** and **CompInstall.ini** into your component package directory and be happy. :wink:
 
