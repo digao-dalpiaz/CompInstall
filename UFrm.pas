@@ -1,3 +1,13 @@
+{------------------------------------------------------------------------------
+Component Installer app
+Developed by Rodrigo Depiné Dalpiaz (digao dalpiaz)
+Delphi utility app to auto-install component packages into IDE
+
+https://github.com/digao-dalpiaz/CompInstall
+
+Please, read the documentation at GitHub link.
+------------------------------------------------------------------------------}
+
 unit UFrm;
 
 interface
