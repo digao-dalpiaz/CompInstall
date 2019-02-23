@@ -386,6 +386,9 @@ begin
 
   BplDir := AddBarDir(GetPublicDocs)+'Embarcadero\Studio\'+InternalDelphiVersionKey+'\Bpl';
 
+  if not DirectoryExists(BplDir) then
+    raise Exception.CreateFmt('Public Delphi folder not found at: %s', [BplDir]);
+
   R := TRegistry.Create;
   try
     R.RootKey := HKEY_CURRENT_USER;
