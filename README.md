@@ -51,7 +51,7 @@ To specify package parameters, create a section with the name of the package wit
 
 If any package has this option enabled, it will be display a checkbox allowing install 64-bit version of component (the checkbox starts checked by default).
 
-`PublishFiles` (optional) = It's a list splited by ";" with all files you want to copy into release foldes (usually DFM form files used at runtime and resource files).
+`PublishFiles` (optional) = It's a list splited by ";" with all files you want to copy into release folders (usually DFM form files used at runtime and resource files).
 
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
 
