@@ -7,7 +7,7 @@
 - [What's New](#whats-new)
 - [Description](#description)
 - [How to use](#how-to-use)
-- [CompInstall.ini structure](#compinstall.ini-structure)
+- [CompInstall.ini structure](#compinstallini-structure)
 
 ## What's New
 
