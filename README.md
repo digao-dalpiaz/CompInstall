@@ -4,19 +4,28 @@
 
 ![App Print](images/print.png)
 
-This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
-
-You need only to create an Ini file called **CompInstall.ini** and write parameters to the app.
-
-Then put the **CompInstall.exe** and **CompInstall.ini** into your component package directory and be happy. :wink:
-
-> Note: This app requires MSBUILD, which is present at .NET Framework 2.0, 3.5 and 4.0. When the app launch, it will verify if any MSBUILD is available.
+- [What's New](#whats-new)
+- [Description](#description)
+- [How to use](#how-to-use)
+- [CompInstall.ini structure](#compinstall.ini-structure)
 
 ## What's New
 
 - 02/15/2019 (Version 1.1)
 
    - Removed Allow64bit parameter in the General section. The app will detect this parameter automatically when appears at any package parameter.
+
+## Description
+
+This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
+
+## How to use
+
+You need only to create an Ini file called **CompInstall.ini** and write parameters to the app.
+
+Then put the **CompInstall.exe** and **CompInstall.ini** into your component package directory and be happy. :wink:
+
+> Note: This app requires MSBUILD, which is present at .NET Framework 2.0, 3.5 and 4.0. When the app launch, it will verify if any MSBUILD is available.
 
 ## CompInstall.ini structure
 
