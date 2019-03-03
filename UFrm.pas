@@ -19,12 +19,12 @@ uses Vcl.Forms, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons,
 
 type
   TFrm = class(TForm)
-    Label1: TLabel;
+    LbComponentName: TLabel;
     EdCompName: TEdit;
-    Label2: TLabel;
+    LbDelphiVersion: TLabel;
     EdDV: TComboBox;
     Ck64bit: TCheckBox;
-    Label3: TLabel;
+    LbInstallLog: TLabel;
     BtnInstall: TBitBtn;
     BtnExit: TBitBtn;
     M: TRichEdit;

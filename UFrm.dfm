@@ -18,21 +18,21 @@ object Frm: TFrm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
+  object LbComponentName: TLabel
     Left = 16
     Top = 16
     Width = 64
     Height = 13
     Caption = 'Component:'
   end
-  object Label2: TLabel
+  object LbDelphiVersion: TLabel
     Left = 16
     Top = 64
     Width = 110
     Height = 13
     Caption = 'Select Delphi version:'
   end
-  object Label3: TLabel
+  object LbInstallLog: TLabel
     Left = 16
     Top = 112
     Width = 80

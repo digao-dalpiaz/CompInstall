@@ -57,4 +57,23 @@ If any package has this option enabled, it will be display a checkbox allowing i
 
 >Note: The app compiles your component using **Release** target. This means all packages need to be configured at default output folder (Win32\Release and Win64\Release).
 
-**Check my Delphi components here at GitHub and find CompInstall.ini file to see usage examples.**
+### Example
+
+In this example, there is two Delphi packages (DamPackage and DamDesignPackage). The design-time package (DamDesignPackage) is configured to install into Delphi IDE. The runtime package (DamPackage) is configured to copy dfm form file and resource file to release folder.
+
+```
+[General]
+Name=Dam Component
+DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
+Packages=DamPackage;DamDesignPackage
+AddLibrary=1
+
+[P_DamPackage]
+Allow64bit=1
+PublishFiles=DamDialog.dfm;Dam_Resource.res
+
+[P_DamDesignPackage]
+Install=1
+```
+
+**Check my Delphi components here at GitHub and find CompInstall.ini file to see others usage examples.**
