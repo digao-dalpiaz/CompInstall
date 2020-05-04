@@ -184,8 +184,8 @@ begin
       Add('9.0', 'XE2', 'Delphi XE2');
       Add('10.0', 'XE3', 'Delphi XE3');
       Add('11.0', 'XE4', 'Delphi XE4');
-      Add('12.0', 'XE5', 'Delphi XE5');
-      Add('14.0', 'XE6', 'Delphi XE6');
+      Add('12.0', 'XE5', 'Delphi XE5'); //public folder 'RAD Studio'
+      Add('14.0', 'XE6', 'Delphi XE6'); //public folder 'Embarcadero\Studio'
       Add('15.0', 'XE7', 'Delphi XE7');
       Add('16.0', 'XE8', 'Delphi XE8');
       Add('17.0', '10', 'Delphi 10 Seattle');
@@ -380,11 +380,19 @@ end;
 
 procedure TFrm.RegisterBPL(const aPackage: String);
 var R: TRegistry;
-  BplDir: String;
+  BplDir, PublicPrefix: String;
+  FS: TFormatSettings;
 begin
   Log('Install BPL into IDE of '+aPackage);
 
-  BplDir := AddBarDir(GetPublicDocs)+'Embarcadero\Studio\'+InternalDelphiVersionKey+'\Bpl';
+  FS := TFormatSettings.Create;
+  FS.DecimalSeparator := '.';
+  if StrToFloat(InternalDelphiVersionKey, FS)<=12 then //Delphi XE5 or below
+    PublicPrefix := 'RAD Studio'
+  else
+    PublicPrefix := 'Embarcadero\Studio';
+
+  BplDir := AddBarDir(GetPublicDocs)+PublicPrefix+'\'+InternalDelphiVersionKey+'\Bpl';
 
   if not DirectoryExists(BplDir) then
     raise Exception.CreateFmt('Public Delphi folder not found at: %s', [BplDir]);

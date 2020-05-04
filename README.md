@@ -11,6 +11,10 @@
 
 ## What's New
 
+- 05/03/2020 (Version 1.2)
+
+   - Fixed RegisterBPL method because Delphi XE5 or below use "RAD Studio" public folder instead "Embarcadero\Studio".
+
 - 02/15/2019 (Version 1.1)
 
    - Removed Allow64bit parameter in the General section. The app will detect this parameter automatically when appears at any package parameter.
