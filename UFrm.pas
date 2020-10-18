@@ -198,7 +198,7 @@ begin
   end;
 
   if EdDV.Items.Count=0 then
-    raise Exception.Create('None Delphi version installed or supported');
+    raise Exception.Create('No version of Delphi installed or supported');
 
   EdDV.ItemIndex := EdDV.Items.Count-1; //select last version
 end;
@@ -209,7 +209,7 @@ begin
 
   if EdDV.ItemIndex=-1 then
   begin
-    MessageDlg('Select a Delphi version', mtError, [mbOK], 0);
+    MessageDlg('Select one Delphi version', mtError, [mbOK], 0);
     EdDV.SetFocus;
     Exit;
   end;
