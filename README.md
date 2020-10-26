@@ -28,6 +28,8 @@
 
 This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
 
+In addition, if the component is hosted on GitHub, you can indicate the path of the repository and the application will check for updates directly in the repository's Releases.
+
 ## How to use
 
 You need only to create an Ini file called **CompInstall.ini** and write parameters to the app.
