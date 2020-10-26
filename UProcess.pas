@@ -2,7 +2,7 @@ unit UProcess;
 
 interface
 
-uses System.Classes, UDefinitions, Vcl.Graphics;
+uses System.Classes, Vcl.Graphics, UDefinitions;
 
 type
   TProcess = class(TThread)

@@ -11,6 +11,11 @@
 
 ## What's New
 
+- 10/26/2020 (Version 2.0)
+
+   - Compilation process now uses thread.
+   - GitHub auto-update supporting.
+
 - 05/03/2020 (Version 1.2)
 
    - Fixed RegisterBPL method because Delphi XE5 or below use "RAD Studio" public folder instead "Embarcadero\Studio".
@@ -37,6 +42,8 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 `Name` (required) = Component name displayed at install form and registered into Delphi Packages.
 
+`Version` (required) = Component version displayed at install form and used by GitHub auto-update control (if enabled).
+
 `DelphiVersions` (required) = It's a list splited by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
 
 > Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
@@ -60,6 +67,10 @@ If any package has this option enabled, it will be display a checkbox allowing i
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
 
 >Note: The app compiles your component using **Release** target. This means all packages need to be configured at default output folder (Win32\Release and Win64\Release).
+
+**GitHub section**
+
+`Repository` (optional) = Allows you to specify a GitHub repository (syntax: `GitHub account`/`Repository name`), so when app starts, it will check for component update using GitHub API, reading the latest existing release and comparing its version with current version. If the versions don't match, a dialog will be displayed asking if you want to auto-update files.
 
 ### Example
 

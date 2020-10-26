@@ -2,7 +2,7 @@ unit UGitHub;
 
 interface
 
-procedure CheckGitHubUpdate(Repository, CurrentVersion: String);
+procedure CheckGitHubUpdate(const Repository, CurrentVersion: String);
 
 implementation
 
@@ -80,7 +80,7 @@ begin
 
   if CurrentVersion<>tag_version then
   begin
-    Log(Format('New version "%s" available.', [tag_version]));
+    Log(Format('New version "%s" available.', [tag_version]), True, clPurple);
 
     Synchronize(
       procedure
@@ -94,7 +94,7 @@ begin
     if Confirm then
       Download(tag_zip);
   end else
-    Log('Your version is already updated.');
+    Log('Your version is already updated.', True, clGreen);
 end;
 
 procedure TThCheck.Download(const URL: String);
@@ -143,9 +143,11 @@ begin
     Z.Free;
   end;
 
-  //***PROVISORIO
-  TFile.Copy(Application.ExeName, TPath.Combine(TmpPath, COMPINST_EXE), True);
+  //***FOR TEST ONLY
+  //TFile.Copy(Application.ExeName, TPath.Combine(TmpPath, COMPINST_EXE), True);
   //***
+
+  Log('Running new app...');
 
   SetEnvironmentVariable('UPD_PATH', PChar(AppDir));
   ShellExecute(0, '', PChar(TPath.Combine(TmpPath, COMPINST_EXE)), '/upd', '', SW_SHOWNORMAL);
@@ -153,7 +155,7 @@ begin
   Synchronize(Application.Terminate);
 end;
 
-procedure CheckGitHubUpdate(Repository, CurrentVersion: String);
+procedure CheckGitHubUpdate(const Repository, CurrentVersion: String);
 var C: TThCheck;
 begin
   if Repository.IsEmpty then Exit;  

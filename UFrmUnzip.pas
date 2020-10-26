@@ -19,10 +19,10 @@ implementation
 
 {$R *.dfm}
 
-uses System.SysUtils, System.IOUtils, System.Zip,
+uses UCommon,
+  System.SysUtils, System.IOUtils, System.Zip,
   Vcl.Dialogs, System.UITypes,
-  Winapi.ShellAPI, Winapi.Windows,
-  UCommon;
+  Winapi.ShellAPI, Winapi.Windows;
 
 procedure TFrmUnzip.FormActivate(Sender: TObject);
 begin

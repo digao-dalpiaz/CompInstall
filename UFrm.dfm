@@ -45,7 +45,7 @@ object Frm: TFrm
     Top = 16
     Width = 123
     Height = 13
-    Caption = 'Component Installer 1.2'
+    Caption = 'Component Installer 2.0'
     Font.Charset = ANSI_CHARSET
     Font.Color = clGreen
     Font.Height = -11
