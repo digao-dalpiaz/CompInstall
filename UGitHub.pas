@@ -69,6 +69,9 @@ begin
 
   data := TJSONObject.ParseJSONValue(Res) as TJSONObject;
   try
+    if data.GetValue('id')=nil then
+      raise Exception.Create('No releases found on GitHub');
+
     tag_version := data.GetValue('tag_name').Value;
     tag_url := data.GetValue('html_url').Value;
     tag_zip := data.GetValue('zipball_url').Value;
