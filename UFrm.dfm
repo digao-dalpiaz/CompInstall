@@ -5,7 +5,7 @@ object Frm: TFrm
   BorderStyle = bsSingle
   Caption = 'Component Installer'
   ClientHeight = 455
-  ClientWidth = 665
+  ClientWidth = 729
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -16,6 +16,7 @@ object Frm: TFrm
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object LbComponentName: TLabel
@@ -40,7 +41,7 @@ object Frm: TFrm
     Caption = 'Installation Log'
   end
   object LbVersion: TLabel
-    Left = 528
+    Left = 592
     Top = 16
     Width = 123
     Height = 13
@@ -51,6 +52,13 @@ object Frm: TFrm
     Font.Name = 'Segoe UI'
     Font.Style = []
     ParentFont = False
+  end
+  object LbComponentVersion: TLabel
+    Left = 456
+    Top = 16
+    Width = 41
+    Height = 13
+    Caption = 'Version:'
   end
   object EdCompName: TEdit
     Left = 16
@@ -87,7 +95,7 @@ object Frm: TFrm
     TabOrder = 3
   end
   object BtnInstall: TBitBtn
-    Left = 224
+    Left = 256
     Top = 408
     Width = 105
     Height = 33
@@ -208,7 +216,7 @@ object Frm: TFrm
     OnClick = BtnInstallClick
   end
   object BtnExit: TBitBtn
-    Left = 336
+    Left = 368
     Top = 408
     Width = 105
     Height = 33
@@ -331,7 +339,7 @@ object Frm: TFrm
   object M: TRichEdit
     Left = 16
     Top = 128
-    Width = 633
+    Width = 697
     Height = 265
     TabStop = False
     HideScrollBars = False
@@ -341,7 +349,7 @@ object Frm: TFrm
     Zoom = 100
   end
   object LinkLabel1: TLinkLabel
-    Left = 576
+    Left = 640
     Top = 40
     Width = 76
     Height = 17
@@ -350,5 +358,15 @@ object Frm: TFrm
       'piaz</a>'
     TabOrder = 1
     OnLinkClick = LinkLabel1LinkClick
+  end
+  object EdCompVersion: TEdit
+    Left = 456
+    Top = 32
+    Width = 121
+    Height = 21
+    TabStop = False
+    Color = clBtnFace
+    ReadOnly = True
+    TabOrder = 7
   end
 end

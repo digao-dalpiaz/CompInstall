@@ -20,9 +20,12 @@ type
   TDefinitions = class
   public
     CompName: String;
+    CompVersion: String;
     DelphiVersions: String;
     AddLibrary: Boolean;
     Packages: TPackages;
+
+    GitHubRepository: String;
 
     procedure LoadIniFile(const aFile: String);
 
@@ -57,6 +60,10 @@ begin
     if CompName='' then
       raise Exception.Create('Component name not specifyed at ini file');
 
+    CompVersion := Ini.ReadString('General', 'Version', '');
+    if CompVersion='' then
+      raise Exception.Create('Component version not specifyed at ini file');
+
     DelphiVersions := Ini.ReadString('General', 'DelphiVersions', ''); //splitted by ";"
     if DelphiVersions='' then
       raise Exception.Create('No Delphi version specifyed at ini file');
@@ -85,6 +92,8 @@ begin
     finally
       S.Free;
     end;
+
+    GitHubRepository := Ini.ReadString('GitHub', 'Repository', '');
 
   finally
     Ini.Free;
