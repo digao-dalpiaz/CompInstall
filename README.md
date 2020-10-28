@@ -4,8 +4,6 @@
 
 ## Delphi app utility to auto-install component packages into IDE.
 
-![App Print](images/print.png)
-
 - [What's New](#whats-new)
 - [Description](#description)
 - [How to use](#how-to-use)
