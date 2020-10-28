@@ -1,4 +1,4 @@
-![Preview](images/app_preview.png)
+![Preview](images/app_preview.gif)
 
 # Component Installer
 
