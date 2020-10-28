@@ -1,3 +1,5 @@
+![Preview](images/app_preview.png)
+
 # Component Installer
 
 ## Delphi app utility to auto-install component packages into IDE.
