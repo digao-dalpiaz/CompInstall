@@ -81,6 +81,7 @@ In this example, there are two Delphi packages (DamPackage and DamDesignPackage)
 ```
 [General]
 Name=Dam Component
+Version=1.0
 DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
 Packages=DamPackage;DamDesignPackage
 AddLibrary=1
