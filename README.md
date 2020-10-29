@@ -6,6 +6,7 @@
 
 - [What's New](#whats-new)
 - [Description](#description)
+- [Features](#features)
 - [How to use](#how-to-use)
 - [CompInstall.ini structure](#compinstallini-structure)
 
@@ -29,6 +30,16 @@
 This app allows you to distribute your Delphi component without having to do a long task list to manually install the component into IDE (*when you are providing component sources, of course*).
 
 In addition, if the component is hosted on GitHub, you can indicate the path of the repository and the application will check for updates directly in the repository's Releases.
+
+## Features
+
+- Detects all Delphi versions installed and allows programmer to choose which IDE to install.
+- Compiles packages generating BPL files.
+- Installs packages into IDE.
+- Registers paths into Library Path.
+- Copies required resource files to compiled folder (.dfm, .res, ...).
+- Updates component hosted at GitHub automatically.
+- Supports 32 bits and 64 bits compilation.
 
 ## How to use
 
