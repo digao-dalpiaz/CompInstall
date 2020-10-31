@@ -108,6 +108,9 @@ begin
   if not FileExists(aBat) then
     raise Exception.Create('Internal Delphi batch file "rsvars" not found');
 
+  if Flag64bit and not FileExists(TPath.Combine(aRootDir, 'bin\dcc64.exe')) then
+    raise Exception.Create('Delphi 64 bit compiler not found');
+
   for P in D.Packages do
   begin
     CompilePackage(P, aBat, 'Win32');

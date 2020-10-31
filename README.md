@@ -12,6 +12,11 @@
 
 ## What's New
 
+- 10/31/2020 (Version 2.1)
+
+   - Included Delphi 10.4 Sydney support.
+   - Implemented verification of the 64-bit Delphi compiler existence when the 64-bit flag was set.
+
 - 10/26/2020 (Version 2.0)
 
    - Compilation process now uses thread.
@@ -59,7 +64,7 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 `DelphiVersions` (required) = It's a list splited by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
 
-> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
+> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
 
 `Packages` (required) = It's a list splited by ";" with packages to be compiled, in correct order. Just type the package name without the file extension.
 
@@ -93,7 +98,7 @@ In this example, there are two Delphi packages (DamPackage and DamDesignPackage)
 [General]
 Name=Dam Component
 Version=1.0
-DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3
+DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
 Packages=DamPackage;DamDesignPackage
 AddLibrary=1
 
