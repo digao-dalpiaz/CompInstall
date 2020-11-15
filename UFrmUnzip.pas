@@ -40,11 +40,11 @@ end;
 
 procedure TFrmUnzip.Execute;
 var
-  Dir: String;
-  OriginalApp: String;
+  Dir: string;
+  OriginalApp: string;
   I: Integer;
   Z: TZipFile;
-  ZFile, ZFileNormalized: String;
+  ZFile, ZFileNormalized: string;
 begin
   Dir := GetEnvironmentVariable('UPD_PATH');
 

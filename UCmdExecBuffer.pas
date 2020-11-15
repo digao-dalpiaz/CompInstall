@@ -6,16 +6,16 @@ interface
 and allows to retrieve line by line output using OnLine event.}
 
 type
-  TCmdExecBufferEvLine = procedure(const Text: String) of object;
+  TCmdExecBufferEvLine = procedure(const Text: string) of object;
 
   TCmdExecBuffer = class
   public
     OnLine: TCmdExecBufferEvLine; //event to retrieve line by line output
 
-    CommandLine: String;
-    WorkDir: String;
+    CommandLine: string;
+    WorkDir: string;
 
-    Lines: String; //all output lines
+    Lines: string; //all output lines
     ExitCode: Cardinal;
     function Exec: Boolean; //function to execute the program
   end;
@@ -34,7 +34,7 @@ var
   Buffer: array[0..255] of AnsiChar;
   BytesRead: Cardinal;
   Handle: Boolean;
-  aLine: String;
+  aLine: string;
 begin
   Result := False;
   Lines := '';

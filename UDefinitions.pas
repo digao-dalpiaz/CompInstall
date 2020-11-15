@@ -7,7 +7,7 @@ uses System.Generics.Collections, System.Classes;
 type
   TPackage = class
   public
-    Name: String;
+    Name: string;
     Allow64bit: Boolean;
     PublishFiles: TStringList;
     Install: Boolean;
@@ -19,15 +19,15 @@ type
 
   TDefinitions = class
   public
-    CompName: String;
-    CompVersion: String;
-    DelphiVersions: String;
+    CompName: string;
+    CompVersion: string;
+    DelphiVersions: string;
     AddLibrary: Boolean;
     Packages: TPackages;
 
-    GitHubRepository: String;
+    GitHubRepository: string;
 
-    procedure LoadIniFile(const aFile: String);
+    procedure LoadIniFile(const aFile: string);
 
     function HasAny64bit: Boolean;
 
@@ -39,15 +39,15 @@ implementation
 
 uses System.IniFiles, System.SysUtils;
 
-function PVToEnter(const A: String): String;
+function PVToEnter(const A: string): string;
 begin
   //replaces all ";" to ENTER definition
   Result := StringReplace(A, ';', #13#10, [rfReplaceAll]);
 end;
 
-procedure TDefinitions.LoadIniFile(const aFile: String);
+procedure TDefinitions.LoadIniFile(const aFile: string);
 var Ini: TIniFile;
-  A, Sec: String;
+  A, Sec: string;
   S: TStringList;
   P: TPackage;
 begin

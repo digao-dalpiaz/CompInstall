@@ -8,25 +8,25 @@ type
   TProcess = class(TThread)
   public
     constructor Create(D: TDefinitions;
-      const InternalDelphiVersionKey: String; Flag64bit: Boolean);
+      const InternalDelphiVersionKey: string; Flag64bit: Boolean);
   protected
     procedure Execute; override;
   private
     D: TDefinitions;
-    InternalDelphiVersionKey: String;
+    InternalDelphiVersionKey: string;
     Flag64bit: Boolean;
 
-    MSBuildExe: String;
+    MSBuildExe: string;
 
-    procedure Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+    procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 
     procedure FindMSBuild;
     procedure Compile;
-    procedure CompilePackage(P: TPackage; const aBat, aPlatform: String);
+    procedure CompilePackage(P: TPackage; const aBat, aPlatform: string);
     procedure AddLibrary;
-    procedure PublishFiles(P: TPackage; const aPlatform: String);
-    procedure RegisterBPL(const aPackage: String);
-    procedure OnLine(const Text: String);
+    procedure PublishFiles(P: TPackage; const aPlatform: string);
+    procedure RegisterBPL(const aPackage: string);
+    procedure OnLine(const Text: string);
   end;
 
 implementation
@@ -36,7 +36,7 @@ uses System.Win.Registry, Winapi.Windows, System.SysUtils,
   UFrm;
 
 constructor TProcess.Create(D: TDefinitions;
-      const InternalDelphiVersionKey: String; Flag64bit: Boolean);
+      const InternalDelphiVersionKey: string; Flag64bit: Boolean);
 begin
   inherited Create(True);
   FreeOnTerminate := True;
@@ -70,7 +70,7 @@ begin
     end);
 end;
 
-procedure TProcess.Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+procedure TProcess.Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 begin
   Synchronize(
     procedure
@@ -81,8 +81,8 @@ end;
 
 procedure TProcess.Compile;
 var R: TRegistry;
-  aRootDir: String;
-  aBat: String;
+  aRootDir: string;
+  aBat: string;
 
   P: TPackage;
 begin
@@ -123,7 +123,7 @@ begin
   end;
 end;
 
-procedure TProcess.CompilePackage(P: TPackage; const aBat, aPlatform: String);
+procedure TProcess.CompilePackage(P: TPackage; const aBat, aPlatform: string);
 var C: TCmdExecBuffer;
 begin
   Log('Compile package '+P.Name+' ('+aPlatform+')');
@@ -153,14 +153,14 @@ begin
   Log('');
 end;
 
-procedure TProcess.OnLine(const Text: String);
+procedure TProcess.OnLine(const Text: string);
 begin
   //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
 end;
 
-procedure TProcess.PublishFiles(P: TPackage; const aPlatform: String);
-var A, aSource, aDest: String;
+procedure TProcess.PublishFiles(P: TPackage; const aPlatform: string);
+var A, aSource, aDest: string;
 begin
   for A in P.PublishFiles do
   begin
@@ -174,8 +174,8 @@ end;
 
 procedure TProcess.AddLibrary;
 
-  procedure AddKey(const aPlatform: String);
-  var Key, A, Dir: String;
+  procedure AddKey(const aPlatform: string);
+  var Key, A, Dir: string;
     R: TRegistry;
   const SEARCH_KEY = 'Search Path';
   begin
@@ -207,7 +207,7 @@ begin
     AddKey('Win64');
 end;
 
-function GetPublicDocs: String;
+function GetPublicDocs: string;
 var Path: array[0..MAX_PATH] of Char;
 begin
   if not ShGetSpecialFolderPath(0, Path, CSIDL_COMMON_DOCUMENTS, False) then
@@ -216,9 +216,9 @@ begin
   Result := Path;
 end;
 
-procedure TProcess.RegisterBPL(const aPackage: String);
+procedure TProcess.RegisterBPL(const aPackage: string);
 var R: TRegistry;
-  BplDir, PublicPrefix: String;
+  BplDir, PublicPrefix: string;
   FS: TFormatSettings;
 begin
   Log('Install BPL into IDE of '+aPackage);
@@ -253,7 +253,7 @@ procedure TProcess.FindMSBuild;
 var R: TRegistry;
   S: TStringList;
   I: Integer;
-  Dir, aFile: String;
+  Dir, aFile: string;
   Found: Boolean;
 const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
 begin

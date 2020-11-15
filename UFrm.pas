@@ -45,7 +45,7 @@ type
     procedure LoadDelphiVersions;
   public
     procedure SetButtons(bEnabled: Boolean);
-    procedure Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+    procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
   end;
 
 var
@@ -62,11 +62,11 @@ uses UCommon, UProcess, UGitHub,
 
 //-- Object to use in Delphi Version ComboBox
 type TDelphiVersion = class
-  InternalNumber: String;
+  InternalNumber: string;
 end;
 //--
 
-procedure TFrm.Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+procedure TFrm.Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 begin
   //log text at RichEdit control, with some formatted rules
 
@@ -135,7 +135,7 @@ end;
 procedure TFrm.LoadDelphiVersions;
 var R: TRegistry;
 
-  procedure Add(const Key, IniVer, Text: String);
+  procedure Add(const Key, IniVer, Text: string);
   var DV: TDelphiVersion;
   begin
     if R.KeyExists(Key) and HasInList(IniVer, D.DelphiVersions) then

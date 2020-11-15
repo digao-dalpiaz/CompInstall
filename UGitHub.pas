@@ -2,7 +2,7 @@ unit UGitHub;
 
 interface
 
-procedure CheckGitHubUpdate(const Repository, CurrentVersion: String);
+procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
 
 implementation
 
@@ -18,12 +18,12 @@ type
   protected
     procedure Execute; override;
   private
-    Repository: String;
-    CurrentVersion: String;
+    Repository: string;
+    CurrentVersion: string;
 
     procedure Check;
-    procedure Download(const URL: String);
-    procedure Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+    procedure Download(const URL: string);
+    procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
   end;
 
 procedure TThCheck.Execute;
@@ -42,7 +42,7 @@ begin
     end);
 end;
 
-procedure TThCheck.Log(const A: String; bBold: Boolean = True; Color: TColor = clBlack);
+procedure TThCheck.Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 begin
   Synchronize(
     procedure
@@ -54,7 +54,7 @@ end;
 procedure TThCheck.Check;
 var
   H: THTTPClient;
-  Res, tag_url, tag_version, tag_zip: String;
+  Res, tag_url, tag_version, tag_zip: string;
   data: TJSONObject;
   Confirm: Boolean;
 begin
@@ -100,11 +100,11 @@ begin
     Log('Your version is already updated.', True, clGreen);
 end;
 
-procedure TThCheck.Download(const URL: String);
+procedure TThCheck.Download(const URL: string);
 var Dw: TDownLoadURL;
-  TmpPath, TmpFile: String;
+  TmpPath, TmpFile: string;
   Z: TZipFile;
-  ZInternalFile: String;
+  ZInternalFile: string;
   ZInternalFileFound: Boolean;
 begin
   Log('Downloading new version...');
@@ -158,7 +158,7 @@ begin
   Synchronize(Application.Terminate);
 end;
 
-procedure CheckGitHubUpdate(const Repository, CurrentVersion: String);
+procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
 var C: TThCheck;
 begin
   if Repository.IsEmpty then Exit;  
