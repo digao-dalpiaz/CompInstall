@@ -133,7 +133,7 @@ begin
     C.OnLine := OnLine;
 
     C.CommandLine :=
-      Format('%s & "%s" "%s.dproj" /t:build /p:config=Release /p:platform=%s',
+      Format('""%s" & "%s" "%s.dproj" /t:build /p:config=Release /p:platform=%s"',
       [aBat, MSBuildExe, AppDir+P.Name, aPlatform]);
 
     C.WorkDir := AppDir;
