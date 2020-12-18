@@ -12,6 +12,10 @@
 
 ## What's New
 
+- 12/18/2020 (Version 2.2)
+
+   - Fixed call to rsvars.bat when Delphi is installed in a path containing spaces characters.
+
 - 10/31/2020 (Version 2.1)
 
    - Included Delphi 10.4 Sydney support.
