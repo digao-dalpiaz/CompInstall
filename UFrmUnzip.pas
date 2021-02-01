@@ -46,6 +46,9 @@ var
   Z: TZipFile;
   ZFile, ZFileNormalized, ZPath: string;
 begin
+  AppDir := ExtractFilePath(Application.ExeName);
+  ChDir(AppDir);
+
   Dir := GetEnvironmentVariable('UPD_PATH');
 
   if Dir.IsEmpty then
@@ -54,7 +57,7 @@ begin
   if not DirectoryExists(Dir) then
     raise Exception.Create('Component directory does not exist');
 
-  BkpDir := ExcludeTrailingPathDelimiter(Dir)+'_'+FormatDateTime('yyyymmdd-hhnnss', Now);
+  BkpDir := ExcludeTrailingPathDelimiter(Dir)+'_bkp-'+FormatDateTime('yyyymmdd-hhnnss', Now);
 
   I := 5;
   while not System.SysUtils.RenameFile(Dir, BkpDir) do
@@ -68,7 +71,7 @@ begin
 
   Z := TZipFile.Create;
   try
-    Z.Open(TPath.Combine(ExtractFilePath(Application.ExeName), 'data.zip'), zmRead);
+    Z.Open(TPath.Combine(AppDir, 'data.zip'), zmRead);
 
     for ZFile in Z.FileNames do
     begin
