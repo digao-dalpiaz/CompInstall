@@ -28,7 +28,7 @@ begin
   Path := Path.Replace('/', '\');
 
   I := Path.IndexOf('\');
-  if I=-1 then raise Exception.Create('First direcoctory separator not found');
+  if I=-1 then raise Exception.Create('First directory separator not found');
 
   Result := Path.Remove(0, I+1);
 end;

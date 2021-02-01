@@ -40,11 +40,11 @@ end;
 
 procedure TFrmUnzip.Execute;
 var
-  Dir: string;
-  OriginalApp: string;
+  Dir, BkpDir: string;
+  ThisApp: string;
   I: Integer;
   Z: TZipFile;
-  ZFile, ZFileNormalized: string;
+  ZFile, ZFileNormalized, ZPath: string;
 begin
   Dir := GetEnvironmentVariable('UPD_PATH');
 
@@ -54,17 +54,17 @@ begin
   if not DirectoryExists(Dir) then
     raise Exception.Create('Component directory does not exist');
 
-  OriginalApp := TPath.Combine(Dir, COMPINST_EXE);
+  BkpDir := ExcludeTrailingPathDelimiter(Dir)+'_'+FormatDateTime('yyyymmdd-hhnnss', Now);
 
   I := 5;
-  while not System.SysUtils.DeleteFile(OriginalApp) do
+  while not System.SysUtils.RenameFile(Dir, BkpDir) do
   begin
     Dec(I);
-    if I=0 then raise Exception.Create('Could not delete old Component Installer');
+    if I=0 then raise Exception.CreateFmt('There are files in use in folder "%s"', [Dir]);
     Sleep(1000);
   end;
 
-  TFile.Copy(Application.ExeName, OriginalApp);
+  TDirectory.CreateDirectory(Dir);
 
   Z := TZipFile.Create;
   try
@@ -73,15 +73,21 @@ begin
     for ZFile in Z.FileNames do
     begin
       ZFileNormalized := NormalizeAndRemoveFirstDir(ZFile);
-      if SameText(ZFileNormalized, COMPINST_EXE) then Continue;
-      
-      Z.Extract(ZFile, TPath.Combine(Dir, ExtractFilePath(ZFileNormalized)), False);
+
+      ZPath := TPath.Combine(Dir, ExtractFilePath(ZFileNormalized));
+      if not DirectoryExists(ZPath) then ForceDirectories(ZPath);      
+
+      Z.Extract(ZFile, ZPath, False);
     end;
   finally
     Z.Free;
   end;
 
-  ShellExecute(0, '', PChar(OriginalApp), '', '', SW_SHOWNORMAL);
+  ThisApp := TPath.Combine(Dir, COMPINST_EXE);
+  if FileExists(ThisApp) then
+    raise Exception.Create('Could not find new Component Install app');
+
+  ShellExecute(0, '', PChar(ThisApp), '', '', SW_SHOWNORMAL);
 end;
 
 end.
