@@ -149,7 +149,10 @@ begin
   end;
 
   //***FOR TEST ONLY
-  //TFile.Copy(Application.ExeName, TPath.Combine(TmpPath, COMPINST_EXE), True);
+  if FileExists(TPath.Combine(AppDir, 'NO_UPD_CI_APP.TXT')) then
+  begin
+    TFile.Copy(Application.ExeName, TPath.Combine(TmpPath, COMPINST_EXE), True);
+  end;
   //***
 
   Log('Running new app...');
