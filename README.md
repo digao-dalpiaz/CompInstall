@@ -12,6 +12,11 @@
 
 ## What's New
 
+- 02/01/2021 (Version 2.3)
+
+   - Fixed sub-folders creation (missing) when extracting files on GitHub update.
+   - New backup folder on GitHub update (actual folder will be renamed using date and time sufix).
+
 - 12/18/2020 (Version 2.2)
 
    - Fixed call to rsvars.bat when Delphi is installed in a path containing spaces characters.
