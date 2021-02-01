@@ -41,7 +41,7 @@ end;
 procedure TFrmUnzip.Execute;
 var
   Dir, BkpDir: string;
-  ThisApp: string;
+  AppInDest: string;
   I: Integer;
   Z: TZipFile;
   ZFile, ZFileNormalized, ZPath: string;
@@ -73,6 +73,7 @@ begin
     for ZFile in Z.FileNames do
     begin
       ZFileNormalized := NormalizeAndRemoveFirstDir(ZFile);
+      if SameText(ZFileNormalized, COMPINST_EXE) then Continue;      
 
       ZPath := TPath.Combine(Dir, ExtractFilePath(ZFileNormalized));
       if not DirectoryExists(ZPath) then ForceDirectories(ZPath);      
@@ -83,11 +84,9 @@ begin
     Z.Free;
   end;
 
-  ThisApp := TPath.Combine(Dir, COMPINST_EXE);
-  if FileExists(ThisApp) then
-    raise Exception.Create('Could not find new Component Install app');
-
-  ShellExecute(0, '', PChar(ThisApp), '', '', SW_SHOWNORMAL);
+  AppInDest := TPath.Combine(Dir, COMPINST_EXE);
+  TFile.Copy(Application.ExeName, AppInDest);
+  ShellExecute(0, '', PChar(AppInDest), '', '', SW_SHOWNORMAL);
 end;
 
 end.
