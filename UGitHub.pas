@@ -28,6 +28,8 @@ type
 
 procedure TThCheck.Execute;
 begin
+  FreeOnTerminate := True;
+
   try
     Check;
   except
@@ -90,9 +92,7 @@ begin
       begin
         Confirm := MessageDlg(Format(
           'There is a new version "%s" of the component available at GitHub.'+
-          ' Do you want to update it automatically?'+#13#13+
-          'The contents of the component''s current folder will be kept'+
-          ' in a new folder with the current date and time suffix.', [tag_version]),
+          ' Do you want to update it automatically?', [tag_version]),
           mtInformation, mbYesNo, 0) = mrYes;
       end);
 
