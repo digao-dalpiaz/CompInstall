@@ -41,9 +41,13 @@ type
     procedure FormShow(Sender: TObject);
   private
     D: TDefinitions;
+    DefLoaded: Boolean;
 
     procedure LoadDelphiVersions;
+    procedure ClearDelphiVersions;
   public
+    procedure LoadDefinitions;
+
     procedure SetButtons(bEnabled: Boolean);
     procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
   end;
@@ -84,9 +88,11 @@ begin
   SendMessage(M.Handle, WM_VSCROLL, SB_BOTTOM, 0); //scroll to bottom
 end;
 
-procedure TFrm.FormCreate(Sender: TObject);
+procedure TFrm.LoadDefinitions;
 begin
-  AppDir := ExtractFilePath(Application.ExeName);
+  if Assigned(D) then D.Free;
+
+  DefLoaded := False;
 
   D := TDefinitions.Create;
   try
@@ -95,30 +101,37 @@ begin
     EdCompName.Text := D.CompName;
     EdCompVersion.Text := D.CompVersion;
 
+    ClearDelphiVersions; //clear list of delphi versions
     LoadDelphiVersions; //load list of delphi versions
 
     Ck64bit.Visible := D.HasAny64bit;
 
+    DefLoaded := True;
   except
-    BtnInstall.Enabled := False;
-    raise;
+    on E: Exception do
+      Log('Error loading component definitions: '+E.Message, True, clRed);
   end;
 end;
 
+procedure TFrm.FormCreate(Sender: TObject);
+begin
+  ReportMemoryLeaksOnShutdown := True;
+
+  AppDir := ExtractFilePath(Application.ExeName);
+
+  LoadDefinitions;
+end;
+
 procedure TFrm.FormDestroy(Sender: TObject);
-var I: Integer;
 begin
   D.Free;
-
-  //--Free objects of delphi versions list
-  for I := 0 to EdDV.Items.Count-1 do
-    EdDV.Items.Objects[I].Free;
-  //--
+  ClearDelphiVersions;
 end;
 
 procedure TFrm.FormShow(Sender: TObject);
 begin
-  CheckGitHubUpdate(D.GitHubRepository, D.CompVersion);
+  if DefLoaded then
+    CheckGitHubUpdate(D.GitHubRepository, D.CompVersion);
 end;
 
 procedure TFrm.LinkLabel1LinkClick(Sender: TObject; const Link: string;
@@ -181,9 +194,21 @@ begin
   EdDV.ItemIndex := EdDV.Items.Count-1; //select last version
 end;
 
+procedure TFrm.ClearDelphiVersions;
+var I: Integer;
+begin
+  for I := 0 to EdDV.Items.Count-1 do
+    EdDV.Items.Objects[I].Free;
+
+  EdDV.Items.Clear;
+end;
+
 procedure TFrm.BtnInstallClick(Sender: TObject);
 var P: TProcess;
 begin
+  if not DefLoaded then
+    raise Exception.Create('Component definitions are not loaded');
+
   M.Clear; //clear log
 
   if EdDV.ItemIndex=-1 then

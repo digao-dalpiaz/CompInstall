@@ -6,10 +6,10 @@ procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
 
 implementation
 
-uses System.Net.HttpClient, System.JSON, Vcl.Dialogs, Vcl.Graphics,
-  System.SysUtils, System.UITypes, System.Classes, Vcl.ExtActns,
-  System.IOUtils, System.Zip, Winapi.ShellAPI, Winapi.Windows,
-  UFrm, UCommon, Vcl.Forms;
+uses System.Classes, System.SysUtils, Vcl.Graphics,
+  Vcl.Dialogs, System.UITypes, System.IOUtils,
+  System.Net.HttpClient, System.JSON, Vcl.ExtActns, System.Zip,
+  UFrm, UCommon;
 
 const URL_GITHUB = 'https://api.github.com/repos/%s/releases/latest';
 
@@ -104,18 +104,13 @@ end;
 
 procedure TThCheck.Download(const URL: string);
 var Dw: TDownLoadURL;
-  TmpPath, TmpFile: string;
+  TmpFile: string;
   Z: TZipFile;
-  ZInternalFile: string;
-  ZInternalFileFound: Boolean;
+  ZPath, ZFile, ZFileNormalized: string;
 begin
   Log('Downloading new version...');
 
-  TmpPath := ChangeFileExt(TPath.GetTempFileName, string.Empty);
-  if not CreateDir(TmpPath) then
-    raise Exception.Create('Could not create temporary folder');
-
-  TmpFile := TPath.Combine(TmpPath, 'data.zip');
+  TmpFile := TPath.GetTempFileName;
 
   Dw := TDownLoadURL.Create(nil);
   try
@@ -126,41 +121,34 @@ begin
     Dw.Free;
   end;
 
-  Log('Extracting new Component Install app...');
+  Log('Extracting component updates...');
 
   Z := TZipFile.Create;
   try
     Z.Open(TmpFile, zmRead);
 
-    ZInternalFileFound := False;
+    for ZFile in Z.FileNames do
+    begin
+      try
+        ZFileNormalized := NormalizeAndRemoveFirstDir(ZFile);
 
-    for ZInternalFile in Z.FileNames do
-      if SameText(NormalizeAndRemoveFirstDir(ZInternalFile), COMPINST_EXE) then
-      begin
-        ZInternalFileFound := True;
-        Z.Extract(ZInternalFile, TmpPath, False);
-        Break;
+        ZPath := TPath.Combine(AppDir, ExtractFilePath(ZFileNormalized));
+        if not DirectoryExists(ZPath) then ForceDirectories(ZPath);
+
+        Z.Extract(ZFile, ZPath, False);
+      except
+        on E: Exception do
+          raise Exception.CreateFmt('Error extracting "%s": %s', [ZFile, E.Message]);
       end;
-
-    if not ZInternalFileFound then
-      raise Exception.Create('Component Installer not found in zip file');
+    end;
   finally
     Z.Free;
   end;
 
-  //***FOR TEST ONLY
-  if FileExists(TPath.Combine(AppDir, 'NO_UPD_CI_APP.TXT')) then
-  begin
-    TFile.Copy(Application.ExeName, TPath.Combine(TmpPath, COMPINST_EXE), True);
-  end;
-  //***
+  Log('Reloading component info...');
+  Synchronize(Frm.LoadDefinitions); //reaload definitions
 
-  Log('Running new app...');
-
-  SetEnvironmentVariable('UPD_PATH', PChar(AppDir));
-  ShellExecute(0, '', PChar(TPath.Combine(TmpPath, COMPINST_EXE)), '/upd', '', SW_SHOWNORMAL);
-
-  Synchronize(Application.Terminate);
+  Log('Update complete!');
 end;
 
 procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
