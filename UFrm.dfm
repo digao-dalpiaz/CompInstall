@@ -4,7 +4,7 @@ object Frm: TFrm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Component Installer'
-  ClientHeight = 455
+  ClientHeight = 542
   ClientWidth = 729
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -96,7 +96,7 @@ object Frm: TFrm
   end
   object BtnInstall: TBitBtn
     Left = 256
-    Top = 408
+    Top = 496
     Width = 105
     Height = 33
     Caption = 'Install'
@@ -217,7 +217,7 @@ object Frm: TFrm
   end
   object BtnExit: TBitBtn
     Left = 368
-    Top = 408
+    Top = 496
     Width = 105
     Height = 33
     Caption = 'Exit'
@@ -340,7 +340,7 @@ object Frm: TFrm
     Left = 16
     Top = 128
     Width = 697
-    Height = 265
+    Height = 361
     TabStop = False
     HideScrollBars = False
     ReadOnly = True
