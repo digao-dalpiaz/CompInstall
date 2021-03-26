@@ -135,7 +135,8 @@ begin
 end;
 
 procedure TFrm.BtnInstallClick(Sender: TObject);
-var P: TProcess;
+var
+  P: TProcess;
 begin
   if not DefLoaded then
     raise Exception.Create('Component definitions are not loaded');

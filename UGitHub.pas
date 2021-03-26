@@ -103,7 +103,8 @@ begin
 end;
 
 procedure TThCheck.Download(const URL: string);
-var Dw: TDownLoadURL;
+var
+  Dw: TDownLoadURL;
   TmpFile: string;
   Z: TZipFile;
   ZPath, ZFile, ZFileNormalized: string;
@@ -152,7 +153,8 @@ begin
 end;
 
 procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
-var C: TThCheck;
+var
+  C: TThCheck;
 begin
   if Repository.IsEmpty then Exit;  
 
