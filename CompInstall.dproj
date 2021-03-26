@@ -103,9 +103,7 @@
         <DCCReference Include="UGitHub.pas"/>
         <DCCReference Include="UProcess.pas"/>
         <DCCReference Include="UCommon.pas"/>
-        <DCCReference Include="UFrmUnzip.pas">
-            <Form>FrmUnzip</Form>
-        </DCCReference>
+        <DCCReference Include="UDelphiVersionCombo.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

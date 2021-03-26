@@ -9,16 +9,13 @@ uses
   UGitHub in 'UGitHub.pas',
   UProcess in 'UProcess.pas',
   UCommon in 'UCommon.pas',
-  UFrmUnzip in 'UFrmUnzip.pas' {FrmUnzip};
+  UDelphiVersionCombo in 'UDelphiVersionCombo.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  if not FindCmdLineSwitch('upd') then
-    Application.CreateForm(TFrm, Frm)
-  else
-    Application.CreateForm(TFrmUnzip, FrmUnzip);
+  Application.CreateForm(TFrm, Frm);
   Application.Run;
 end.

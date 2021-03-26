@@ -14,6 +14,13 @@
 
 ## What's New
 
+- 03/25/2021 (Version 2.4)
+
+   - As it is not a good practice to embed the Component Installer EXE in the GitHub component sources, the update of the GitHub repository has been modified to not update the Component Installer EXE, but only the configured component sources.
+
+<details>
+  <summary>Click here to view the entire changelog</summary>
+
 - 02/01/2021 (Version 2.3)
 
    - Fixed sub-folders creation (missing) when extracting files on GitHub update.
@@ -40,6 +47,8 @@
 - 02/15/2019 (Version 1.1)
 
    - Removed Allow64bit parameter in the General section. The app will detect this parameter automatically when appears at any package parameter.
+   
+</details>
 
 ## Description
 
