@@ -148,7 +148,7 @@ begin
   Log('Reloading component info...');
   Synchronize(Frm.LoadDefinitions); //reaload definitions
 
-  Log('Update complete!');
+  Log('Update complete!', True, clGreen);
 end;
 
 procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
