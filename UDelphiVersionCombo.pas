@@ -76,7 +76,8 @@ begin
 end;
 
 class procedure TDelphiVersionComboLoader.Clear(Combo: TComboBox);
-var I: Integer;
+var
+  I: Integer;
 begin
   for I := 0 to Combo.Items.Count-1 do
     Combo.Items.Objects[I].Free;
