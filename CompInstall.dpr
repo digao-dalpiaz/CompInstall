@@ -8,7 +8,8 @@ uses
   UDefinitions in 'UDefinitions.pas',
   UGitHub in 'UGitHub.pas',
   UProcess in 'UProcess.pas',
-  UCommon in 'UCommon.pas';
+  UCommon in 'UCommon.pas',
+  UDelphiVersionCombo in 'UDelphiVersionCombo.pas';
 
 {$R *.res}
 

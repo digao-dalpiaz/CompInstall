@@ -42,9 +42,6 @@ type
   private
     D: TDefinitions;
     DefLoaded: Boolean;
-
-    procedure LoadDelphiVersions;
-    procedure ClearDelphiVersions;
   public
     procedure LoadDefinitions;
 
@@ -59,16 +56,9 @@ implementation
 
 {$R *.dfm}
 
-uses UCommon, UProcess, UGitHub,
-  System.SysUtils, System.Win.Registry,
-  Winapi.Windows, Winapi.Messages, Winapi.ShellApi, System.UITypes,
-  Vcl.Dialogs;
-
-//-- Object to use in Delphi Version ComboBox
-type TDelphiVersion = class
-  InternalNumber: string;
-end;
-//--
+uses System.SysUtils, Vcl.Dialogs, System.UITypes,
+  Winapi.Windows, Winapi.Messages, Winapi.ShellAPI,
+  UCommon, UProcess, UGitHub, UDelphiVersionCombo;
 
 procedure TFrm.Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 begin
@@ -101,8 +91,7 @@ begin
     EdCompName.Text := D.CompName;
     EdCompVersion.Text := D.CompVersion;
 
-    ClearDelphiVersions; //clear list of delphi versions
-    LoadDelphiVersions; //load list of delphi versions
+    TDelphiVersionComboLoader.Load(EdDV, D.DelphiVersions);
 
     Ck64bit.Visible := D.HasAny64bit;
 
@@ -125,7 +114,7 @@ end;
 procedure TFrm.FormDestroy(Sender: TObject);
 begin
   D.Free;
-  ClearDelphiVersions;
+  TDelphiVersionComboLoader.Clear(EdDV);
 end;
 
 procedure TFrm.FormShow(Sender: TObject);
@@ -143,64 +132,6 @@ end;
 procedure TFrm.BtnExitClick(Sender: TObject);
 begin
   Close;
-end;
-
-procedure TFrm.LoadDelphiVersions;
-var R: TRegistry;
-
-  procedure Add(const Key, IniVer, Text: string);
-  var DV: TDelphiVersion;
-  begin
-    if R.KeyExists(Key) and HasInList(IniVer, D.DelphiVersions) then
-    begin
-      DV := TDelphiVersion.Create;
-      DV.InternalNumber := Key;
-      EdDV.Items.AddObject(Text, DV);
-    end;
-  end;
-
-begin
-  R := TRegistry.Create;
-  try
-    R.RootKey := HKEY_CURRENT_USER;
-    if R.OpenKeyReadOnly(BDS_KEY) then
-    begin
-      Add('3.0', '2005', 'Delphi 2005');
-      Add('4.0', '2006', 'Delphi 2006');
-      Add('5.0', '2007', 'Delphi 2007');
-      Add('6.0', '2009', 'Delphi 2009');
-      Add('7.0', '2010', 'Delphi 2010');
-      Add('8.0', 'XE', 'Delphi XE');
-      Add('9.0', 'XE2', 'Delphi XE2');
-      Add('10.0', 'XE3', 'Delphi XE3');
-      Add('11.0', 'XE4', 'Delphi XE4');
-      Add('12.0', 'XE5', 'Delphi XE5'); //public folder 'RAD Studio'
-      Add('14.0', 'XE6', 'Delphi XE6'); //public folder 'Embarcadero\Studio'
-      Add('15.0', 'XE7', 'Delphi XE7');
-      Add('16.0', 'XE8', 'Delphi XE8');
-      Add('17.0', '10', 'Delphi 10 Seattle');
-      Add('18.0', '10.1', 'Delphi 10.1 Berlin');
-      Add('19.0', '10.2', 'Delphi 10.2 Tokyo');
-      Add('20.0', '10.3', 'Delphi 10.3 Rio');
-      Add('21.0', '10.4', 'Delphi 10.4 Sydney');
-    end;
-  finally
-    R.Free;
-  end;
-
-  if EdDV.Items.Count=0 then
-    raise Exception.Create('No version of Delphi installed or supported');
-
-  EdDV.ItemIndex := EdDV.Items.Count-1; //select last version
-end;
-
-procedure TFrm.ClearDelphiVersions;
-var I: Integer;
-begin
-  for I := 0 to EdDV.Items.Count-1 do
-    EdDV.Items.Objects[I].Free;
-
-  EdDV.Items.Clear;
 end;
 
 procedure TFrm.BtnInstallClick(Sender: TObject);
@@ -229,7 +160,7 @@ begin
   Refresh;
 
   P := TProcess.Create(D,
-    TDelphiVersion(EdDV.Items.Objects[EdDV.ItemIndex]).InternalNumber,
+    TDelphiVersionItem(EdDV.Items.Objects[EdDV.ItemIndex]).InternalNumber,
     Ck64bit.Checked and Ck64bit.Visible);
 
   P.Start;
