@@ -4,8 +4,6 @@ interface
 
 const BDS_KEY = 'Software\Embarcadero\BDS';
 
-const COMPINST_EXE = 'CompInstall.exe';
-
 var AppDir: string;
 
 function HasInList(const Item, List: string): Boolean;
