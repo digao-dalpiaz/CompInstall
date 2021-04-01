@@ -17,6 +17,7 @@
 - 03/25/2021 (Version 2.4)
 
    - As it is not a good practice to embed the Component Installer EXE in the GitHub component sources, the update of the GitHub repository has been modified to not update the Component Installer EXE, but only the configured component sources.
+   - Removed backup functionality in GitHub auto-update.
 
 <details>
   <summary>Click here to view the entire changelog</summary>
