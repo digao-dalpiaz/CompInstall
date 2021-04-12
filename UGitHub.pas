@@ -24,6 +24,7 @@ type
     procedure Check;
     procedure Download(const URL: string);
     procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
+    procedure CleanFolder;
   end;
 
 procedure TThCheck.Execute;
@@ -92,8 +93,9 @@ begin
       begin
         Confirm := MessageDlg(Format(
           'There is a new version "%s" of the component available at GitHub.'+
-          ' Do you want to update it automatically?', [tag_version]),
-          mtInformation, mbYesNo, 0) = mrYes;
+          ' Do you want to update it automatically?'+#13+#13+
+          'Warning: All content in the component''s folder and subfolders will be deleted.',
+          [tag_version]), mtInformation, mbYesNo, 0) = mrYes;
       end);
 
     if Confirm then
@@ -109,6 +111,9 @@ var
   Z: TZipFile;
   ZPath, ZFile, ZFileNormalized: string;
 begin
+  Log('Cleaning component folder...');
+  CleanFolder;
+
   Log('Downloading new version...');
 
   TmpFile := TPath.GetTempFileName;
@@ -150,6 +155,33 @@ begin
   Synchronize(Frm.LoadDefinitions); //reaload definitions
 
   Log('Update complete!', True, clGreen);
+end;
+
+procedure TThCheck.CleanFolder;
+var
+  Path, FileName: string;
+begin
+  for Path in TDirectory.GetFiles(AppDir) do
+  begin
+    FileName := ExtractFileName(Path);
+    if SameText(FileName, ExtractFileName(ParamStr(0))) or
+      SameText(FileName, INI_FILE_NAME) then Continue;
+
+    try
+      TFile.Delete(Path);
+    except
+      raise Exception.CreateFmt('Could not delete file %s', [Path]);
+    end;
+  end;
+
+  for Path in TDirectory.GetDirectories(AppDir) do
+  begin
+    try
+      TDirectory.Delete(Path, True);
+    except
+      raise Exception.CreateFmt('Could not delete folder %s', [Path]);
+    end;
+  end;
 end;
 
 procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);

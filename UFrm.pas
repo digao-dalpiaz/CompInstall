@@ -86,7 +86,7 @@ begin
 
   D := TDefinitions.Create;
   try
-    D.LoadIniFile(AppDir+'CompInstall.ini');
+    D.LoadIniFile(AppDir+INI_FILE_NAME);
 
     EdCompName.Text := D.CompName;
     EdCompVersion.Text := D.CompVersion;
