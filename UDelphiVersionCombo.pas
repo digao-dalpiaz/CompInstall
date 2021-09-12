@@ -64,6 +64,7 @@ begin
       Add('19.0', '10.2', 'Delphi 10.2 Tokyo');
       Add('20.0', '10.3', 'Delphi 10.3 Rio');
       Add('21.0', '10.4', 'Delphi 10.4 Sydney');
+      Add('22.0', '11', 'Delphi 11 Alexandria');
     end;
   finally
     R.Free;
