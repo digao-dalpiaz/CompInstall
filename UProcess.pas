@@ -132,7 +132,7 @@ var
 begin
   Log('Compile package '+P.Name+' ('+aPlatform+')');
 
-  aPath := TPath.Combine(AppDir, P.Path); //if PackagesPath blank, Combine ignores automatically
+  aPath := TPath.Combine(AppDir, P.Path); //if P.Path blank, Combine ignores automatically
   aFile := TPath.Combine(aPath, P.Name);
 
   C := TCmdExecBuffer.Create;
