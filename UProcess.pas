@@ -314,7 +314,10 @@ end;
 
 function TProcess.GetOutputPath(const aPlatform: string): string;
 begin
-  Result := D.OutputPath;
+  if D.OutputPath<>string.Empty then
+    Result := D.OutputPath
+  else
+    Result := '{PLATFORM}\{CONFIG}';
 
   Result := Result.Replace('{PLATFORM}', aPlatform);
   Result := Result.Replace('{CONFIG}', 'Release');
