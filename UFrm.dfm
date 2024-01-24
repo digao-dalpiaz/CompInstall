@@ -4,8 +4,8 @@ object Frm: TFrm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Component Installer'
-  ClientHeight = 542
-  ClientWidth = 729
+  ClientHeight = 589
+  ClientWidth = 874
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -39,7 +39,7 @@ object Frm: TFrm
     Caption = 'Installation Log'
   end
   object LbVersion: TLabel
-    Left = 592
+    Left = 726
     Top = 16
     Width = 123
     Height = 13
@@ -52,7 +52,7 @@ object Frm: TFrm
     ParentFont = False
   end
   object LbComponentVersion: TLabel
-    Left = 456
+    Left = 528
     Top = 16
     Width = 41
     Height = 13
@@ -61,7 +61,7 @@ object Frm: TFrm
   object EdCompName: TEdit
     Left = 16
     Top = 32
-    Width = 433
+    Width = 505
     Height = 21
     TabStop = False
     Color = clBtnFace
@@ -77,13 +77,13 @@ object Frm: TFrm
   object EdDV: TComboBox
     Left = 16
     Top = 80
-    Width = 201
+    Width = 225
     Height = 21
     Style = csDropDownList
     TabOrder = 3
   end
   object Ck64bit: TCheckBox
-    Left = 248
+    Left = 272
     Top = 80
     Width = 137
     Height = 17
@@ -93,8 +93,8 @@ object Frm: TFrm
     TabOrder = 4
   end
   object BtnInstall: TBitBtn
-    Left = 256
-    Top = 496
+    Left = 320
+    Top = 544
     Width = 105
     Height = 33
     Caption = 'Install'
@@ -214,8 +214,8 @@ object Frm: TFrm
     OnClick = BtnInstallClick
   end
   object BtnExit: TBitBtn
-    Left = 368
-    Top = 496
+    Left = 432
+    Top = 544
     Width = 105
     Height = 33
     Caption = 'Exit'
@@ -337,8 +337,8 @@ object Frm: TFrm
   object M: TRichEdit
     Left = 16
     Top = 128
-    Width = 697
-    Height = 361
+    Width = 841
+    Height = 410
     TabStop = False
     HideScrollBars = False
     ReadOnly = True
@@ -346,7 +346,7 @@ object Frm: TFrm
     TabOrder = 5
   end
   object LinkLabel1: TLinkLabel
-    Left = 640
+    Left = 774
     Top = 40
     Width = 76
     Height = 17
@@ -357,9 +357,9 @@ object Frm: TFrm
     OnLinkClick = LinkLabel1LinkClick
   end
   object EdCompVersion: TEdit
-    Left = 456
+    Left = 528
     Top = 32
-    Width = 121
+    Width = 161
     Height = 21
     TabStop = False
     Color = clBtnFace

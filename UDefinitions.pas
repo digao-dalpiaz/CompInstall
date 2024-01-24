@@ -8,6 +8,7 @@ type
   TPackage = class
   public
     Name: string;
+    Path: string;
     Allow64bit: Boolean;
     PublishFiles: TStringList;
     Install: Boolean;
@@ -86,6 +87,7 @@ begin
         Sec := 'P_'+A;
 
         P.Name := A;
+        P.Path := Ini.ReadString(Sec, 'Path', '');
         P.Allow64bit := Ini.ReadBool(Sec, 'Allow64bit', False);
         P.PublishFiles.Text := PVToEnter( Ini.ReadString(Sec, 'PublishFiles', '') );
         P.Install := Ini.ReadBool(Sec, 'Install', False);

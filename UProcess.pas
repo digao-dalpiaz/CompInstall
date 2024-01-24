@@ -126,9 +126,14 @@ begin
 end;
 
 procedure TProcess.CompilePackage(P: TPackage; const aBat, aPlatform: string);
-var C: TCmdExecBuffer;
+var
+  C: TCmdExecBuffer;
+  aPath, aFile: string;
 begin
   Log('Compile package '+P.Name+' ('+aPlatform+')');
+
+  aPath := TPath.Combine(AppDir, P.Path); //if PackagesPath blank, Combine ignores automatically
+  aFile := TPath.Combine(aPath, P.Name);
 
   C := TCmdExecBuffer.Create;
   try
@@ -136,9 +141,9 @@ begin
 
     C.CommandLine :=
       Format('""%s" & "%s" "%s.dproj" /t:build /p:config=Release /p:platform=%s"',
-      [aBat, MSBuildExe, AppDir+P.Name, aPlatform]);
+      [aBat, MSBuildExe, aFile, aPlatform]);
 
-    C.WorkDir := AppDir;
+    C.WorkDir := aPath;
 
     if not C.Exec then
       raise Exception.Create('Could not execute MSBUILD');
@@ -314,7 +319,7 @@ end;
 
 function TProcess.GetOutputPath(const aPlatform: string): string;
 begin
-  if D.OutputPath<>string.Empty then
+  if not D.OutputPath.IsEmpty then
     Result := D.OutputPath
   else
     Result := '{PLATFORM}\{CONFIG}';
