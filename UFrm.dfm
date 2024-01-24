@@ -80,7 +80,7 @@ object Frm: TFrm
     Width = 201
     Height = 21
     Style = csDropDownList
-    TabOrder = 2
+    TabOrder = 3
   end
   object Ck64bit: TCheckBox
     Left = 248
@@ -90,7 +90,7 @@ object Frm: TFrm
     Caption = 'Install 64-bit support'
     Checked = True
     State = cbChecked
-    TabOrder = 3
+    TabOrder = 4
   end
   object BtnInstall: TBitBtn
     Left = 256
@@ -210,7 +210,7 @@ object Frm: TFrm
       FFC080FFC080FF929596899396819195788F95708C95708C95788F9581919589
       9396929596C080FFC080FFC080FFC080FFC080FFC080FFC080FF}
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 6
     OnClick = BtnInstallClick
   end
   object BtnExit: TBitBtn
@@ -331,7 +331,7 @@ object Frm: TFrm
       78807A78807A78807A78807A78807A78807A78807A78807A78807A78807A7888
       8483C080FFC080FFC080FFC080FFC080FFC080FFC080FFC080FF}
     NumGlyphs = 2
-    TabOrder = 6
+    TabOrder = 7
     OnClick = BtnExitClick
   end
   object M: TRichEdit
@@ -343,7 +343,7 @@ object Frm: TFrm
     HideScrollBars = False
     ReadOnly = True
     ScrollBars = ssVertical
-    TabOrder = 4
+    TabOrder = 5
   end
   object LinkLabel1: TLinkLabel
     Left = 640
@@ -353,7 +353,7 @@ object Frm: TFrm
     Caption = 
       '<a href="https://github.com/digao-dalpiaz/CompInstall">Dig'#227'o Dal' +
       'piaz</a>'
-    TabOrder = 1
+    TabOrder = 2
     OnLinkClick = LinkLabel1LinkClick
   end
   object EdCompVersion: TEdit
@@ -364,6 +364,6 @@ object Frm: TFrm
     TabStop = False
     Color = clBtnFace
     ReadOnly = True
-    TabOrder = 7
+    TabOrder = 1
   end
 end
