@@ -27,6 +27,8 @@ type
     procedure PublishFiles(P: TPackage; const aPlatform: string);
     procedure RegisterBPL(const aPackage: string);
     procedure OnLine(const Text: string);
+
+    function GetOutputPath(const aPlatform: string): string;
   end;
 
 implementation
@@ -160,14 +162,14 @@ begin
 end;
 
 procedure TProcess.PublishFiles(P: TPackage; const aPlatform: string);
-var A, aSource, aDest: string;
+var RelativeFile, aSource, aDest: string;
 begin
-  for A in P.PublishFiles do
+  for RelativeFile in P.PublishFiles do
   begin
-    aSource := AppDir+A;
-    aDest := AppDir+aPlatform+'\Release\'+A;
+    aSource := AppDir+RelativeFile;
+    aDest := GetOutputPath(aPlatform)+'\'+ExtractFileName(RelativeFile);
 
-    Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False, clPurple);
+    Log(Format('Copy file %s to %s', [RelativeFile{aSource}, aDest]), False, clPurple);
     TFile.Copy(aSource, aDest, True);
   end;
 end;
@@ -182,7 +184,7 @@ procedure TProcess.AddLibrary;
     Log('Add library path to '+aPlatform);
 
     Key := BDS_KEY+'\'+InternalDelphiVersionKey+'\Library\'+aPlatform;
-    Dir := AppDir+aPlatform+'\Release';
+    Dir := GetOutputPath(aPlatform);
 
     R := TRegistry.Create;
     try
@@ -308,6 +310,16 @@ begin
     raise Exception.Create('MSBUILD not found in any .NET Framework version');
 
   MSBuildExe := aFile;
+end;
+
+function TProcess.GetOutputPath(const aPlatform: string): string;
+begin
+  Result := D.OutputPath;
+
+  Result := Result.Replace('{PLATFORM}', aPlatform);
+  Result := Result.Replace('{CONFIG}', 'Release');
+
+  Result := AppDir + Result;
 end;
 
 end.

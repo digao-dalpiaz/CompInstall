@@ -12,12 +12,10 @@ object Frm: TFrm
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object LbComponentName: TLabel
     Left = 16
@@ -45,7 +43,7 @@ object Frm: TFrm
     Top = 16
     Width = 123
     Height = 13
-    Caption = 'Component Installer 2.5'
+    Caption = 'Component Installer 2.6'
     Font.Charset = ANSI_CHARSET
     Font.Color = clGreen
     Font.Height = -11
@@ -346,7 +344,6 @@ object Frm: TFrm
     ReadOnly = True
     ScrollBars = ssVertical
     TabOrder = 4
-    Zoom = 100
   end
   object LinkLabel1: TLinkLabel
     Left = 640

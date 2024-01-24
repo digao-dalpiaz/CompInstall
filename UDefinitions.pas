@@ -23,6 +23,7 @@ type
     CompVersion: string;
     DelphiVersions: string;
     AddLibrary: Boolean;
+    OutputPath: string;
     Packages: TPackages;
 
     GitHubRepository: string;
@@ -69,6 +70,7 @@ begin
       raise Exception.Create('No Delphi version specifyed at ini file');
 
     AddLibrary := Ini.ReadBool('General', 'AddLibrary', False);
+    OutputPath := Ini.ReadString('General', 'OutputPath', '');
 
     S := TStringList.Create;
     try
