@@ -14,12 +14,18 @@
 
 ## What's New
 
-- 09/12/2021 (Version 2.5)
+- 01/24/2024 (Version 2.6)
 
-   - Delphi 11 support.
+  - Delphi 12 support.
+  - New ini property: OutputPath
+  - PublishFiles now supports subfolder.
 
 <details>
   <summary>Click here to view the entire changelog</summary>
+
+- 09/12/2021 (Version 2.5)
+
+   - Delphi 11 support.
 
 - 03/25/2021 (Version 2.4)
 
@@ -89,11 +95,13 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 `DelphiVersions` (required) = It's a list splited by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
 
-> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
+> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4;11;12
 
 `Packages` (required) = It's a list splited by ";" with packages to be compiled, in correct order. Just type the package name without the file extension.
 
 `AddLibrary` (optional) = 0 or 1. When 1, the path of release folders of component will be registered into Delphi library path.
+
+`OutputPath` (optional) = Relative folder where compiled files are stored (must be the same configured in package settings). You can use `{PLATFORM}` and `{CONFIG}` variables. Default value is: `{PLATFORM}\{CONFIG}` (By now, {CONFIG} is always "Release").
 
 **Package section**
 
