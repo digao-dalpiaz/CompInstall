@@ -17,7 +17,7 @@
 - 01/24/2024 (Version 2.6)
 
   - Delphi 12 support.
-  - New ini property: OutputPath
+  - New ini properties: OutputPath and Package\Path
   - PublishFiles now supports subfolder.
 
 <details>
@@ -108,6 +108,8 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 To specify package parameters, create a section with the name of the package with the `P_` prefix, like:
 
 `[P_MyPackage]`
+
+`Path` (optional) = Relative folder where package file is. If blank, package must be at component root folder.
 
 `Allow64bit` (optional) = 0 or 1. When 1, specify this package to be compiled twice, with 32-bit and 64-bit versions. Remember to create this platform at Delphi Project Manager, otherwise the 64-bit compilation will fail.
 
