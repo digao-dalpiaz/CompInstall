@@ -2,7 +2,7 @@
 
 # Component Installer
 
-## Delphi VCL app utility to auto-install component packages into IDE.
+## Delphi app utility to auto-install component packages into IDE.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C53LVFN)
 
