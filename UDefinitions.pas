@@ -4,6 +4,8 @@ interface
 
 uses System.Generics.Collections, System.Classes;
 
+const DEFINITIONS_VERSION = 2; //current definitions template
+
 type
   TPackage = class
   public
@@ -20,6 +22,7 @@ type
 
   TDefinitions = class
   public
+    IniVersion: Integer;
     CompName: string;
     CompVersion: string;
     DelphiVersions: string;
@@ -59,6 +62,10 @@ begin
 
   Ini := TIniFile.Create(aFile);
   try
+    IniVersion := Ini.ReadInteger('Template', 'IniVersion', 1);
+    if IniVersion>DEFINITIONS_VERSION then
+      raise Exception.Create('Unsupported ini version. You probably need to update Component Installer!');
+
     CompName := Ini.ReadString('General', 'Name', '');
     if CompName='' then
       raise Exception.Create('Component name not specifyed at ini file');
