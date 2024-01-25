@@ -176,6 +176,10 @@ begin
 
   for Path in TDirectory.GetDirectories(AppDir) do
   begin
+    {$WARN SYMBOL_PLATFORM OFF}
+    if TFileAttribute.faHidden in TDirectory.GetAttributes(Path) then Continue; //ignore hidden folders (like .git)
+    {$WARN SYMBOL_PLATFORM ON}
+
     try
       TDirectory.Delete(Path, True);
     except
