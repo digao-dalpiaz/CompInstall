@@ -17,7 +17,7 @@
 - 01/25/2024 (Version 2.6)
 
   - Delphi 12 support.
-  - New ini properties: OutputPath and Package\Path
+  - New ini properties: IniVersion, OutputPath and Package\Path
   - PublishFiles now supports sub-folder.
   - Clear all files and sub-folders when updating from GitHub.
 
@@ -88,6 +88,12 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 ## CompInstall.ini structure
 
+**`[Template]` section**
+
+`IniVersion` (required) = Version of ini structure (**Current version = 2**)
+
+> If ini version is higher than current app supported version, the app will display an error message and block installation.
+
 **`[General]` section**
 
 `Name` (required) = Component name displayed at install form and registered into Delphi Packages.
@@ -120,9 +126,9 @@ If any package has this option enabled, it will be display a checkbox allowing i
 
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
 
->Note: The app compiles your component using always **Release** target.
+> Note: The app compiles your component using always **Release** target.
 
-**GitHub section**
+**`[GitHub]` section**
 
 `Repository` (optional) = Allows you to specify a GitHub repository (syntax: `GitHub account`/`Repository name`), so when app starts, it will check for component update using GitHub API, reading the latest existing release and comparing its version with current version. If the versions don't match, a dialog will be displayed asking if you want to auto-update files.
 
@@ -131,6 +137,9 @@ If any package has this option enabled, it will be display a checkbox allowing i
 In this example, there are two Delphi packages (DamPackage and DamDesignPackage). The design-time package (DamDesignPackage) is configured to install into Delphi IDE. The runtime package (DamPackage) is configured to copy dfm form file and resource file to release folder.
 
 ```
+[Template]
+IniVersion=2
+
 [General]
 Name=Dam Component
 Version=1.0
