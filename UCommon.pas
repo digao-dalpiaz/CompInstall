@@ -21,7 +21,8 @@ begin
 end;
 
 function NormalizeAndRemoveFirstDir(Path: string): string;
-var I: Integer;
+var
+  I: Integer;
 begin
   Path := Path.Replace('/', '\');
 

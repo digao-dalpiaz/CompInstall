@@ -82,7 +82,8 @@ begin
 end;
 
 procedure TProcess.Compile;
-var R: TRegistry;
+var
+  R: TRegistry;
   aRootDir: string;
   aBat: string;
 
@@ -167,7 +168,8 @@ begin
 end;
 
 procedure TProcess.PublishFiles(P: TPackage; const aPlatform: string);
-var RelativeFile, aSource, aDest: string;
+var
+  RelativeFile, aSource, aDest: string;
 begin
   for RelativeFile in P.PublishFiles do
   begin
@@ -182,7 +184,8 @@ end;
 procedure TProcess.AddLibrary;
 
   procedure AddKey(const aPlatform: string);
-  var Key, A, Dir: string;
+  var
+    Key, A, Dir: string;
     R: TRegistry;
   const SEARCH_KEY = 'Search Path';
   begin
@@ -215,7 +218,8 @@ begin
 end;
 
 function GetPublicDocs: string;
-var Path: array[0..MAX_PATH] of Char;
+var
+  Path: array[0..MAX_PATH] of Char;
 begin
   if not ShGetSpecialFolderPath(0, Path, CSIDL_COMMON_DOCUMENTS, False) then
     raise Exception.Create('Could not find Public Documents folder location') ;
@@ -224,7 +228,8 @@ begin
 end;
 
 procedure TProcess.RegisterBPL(const aPackage: string);
-var R: TRegistry;
+var
+  R: TRegistry;
   BplDir, PublicPrefix: string;
   FS: TFormatSettings;
 begin
@@ -257,12 +262,13 @@ begin
 end;
 
 procedure TProcess.FindMSBuild;
-var R: TRegistry;
+const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
+var
+  R: TRegistry;
   S: TStringList;
   I: Integer;
   Dir, aFile: string;
   Found: Boolean;
-const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
 begin
   R := TRegistry.Create;
   try

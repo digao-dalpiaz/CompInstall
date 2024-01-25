@@ -48,7 +48,8 @@ begin
 end;
 
 procedure TDefinitions.LoadIniFile(const aFile: string);
-var Ini: TIniFile;
+var
+  Ini: TIniFile;
   A, Sec: string;
   S: TStringList;
   P: TPackage;
@@ -119,7 +120,8 @@ begin
 end;
 
 function TDefinitions.HasAny64bit: Boolean;
-var P: TPackage;
+var
+  P: TPackage;
 begin
   Result := False;
 
