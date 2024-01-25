@@ -137,10 +137,12 @@ Version=1.0
 DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
 Packages=DamPackage;DamDesignPackage
 AddLibrary=1
+OutputPath=Library\{PLATFORM}\{CONFIG}
 
 [P_DamPackage]
+Path=Source\Code
 Allow64bit=1
-PublishFiles=DamDialog.dfm;Dam_Resource.res
+PublishFiles=DamDialog.dfm;Resources\Dam_Resource.res
 
 [P_DamDesignPackage]
 Install=1
