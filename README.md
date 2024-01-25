@@ -18,7 +18,8 @@
 
   - Delphi 12 support.
   - New ini properties: OutputPath and Package\Path
-  - PublishFiles now supports subfolder.
+  - PublishFiles now supports sub-folder.
+  - Clear all files and sub-folders when updating from GitHub.
 
 <details>
   <summary>Click here to view the entire changelog</summary>
