@@ -14,7 +14,7 @@
 
 ## What's New
 
-- 01/25/2024 (Version 2.6)
+- 01/27/2024 (Version 2.6)
 
   - Delphi 12 support.
   - New ini properties: IniVersion, OutputPath and Package\Path
