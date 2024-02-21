@@ -175,6 +175,7 @@ begin
   //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
 
+  //MSBUILD does not return error exit code when delphi compiler not supported, so here we check for string message error
   if Text.Contains(COMPILING_ERROR_VERSION_NOT_SUPORTED) then CompilerNotSupportBuilding := True;
 end;
 
