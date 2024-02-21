@@ -94,7 +94,7 @@ begin
         Confirm := MessageDlg(Format(
           'There is a new version "%s" of the component available at GitHub.'+
           ' Do you want to update it automatically?'+#13+#13+
-          'Warning: All content in the component''s folder and subfolders will be deleted.',
+          '*** Warning: All content in the component''s folder and subfolders will be deleted.',
           [tag_version]), mtInformation, mbYesNo, 0) = mrYes;
       end);
 
@@ -164,6 +164,7 @@ begin
   for Path in TDirectory.GetFiles(AppDir) do
   begin
     FileName := ExtractFileName(Path);
+    //skip self EXE and CompInstall.ini
     if SameText(FileName, ExtractFileName(ParamStr(0))) or
       SameText(FileName, INI_FILE_NAME) then Continue;
 
