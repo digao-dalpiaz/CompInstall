@@ -6,26 +6,56 @@ procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
 
 implementation
 
-uses System.Classes, System.SysUtils, Vcl.Graphics,
-  Vcl.Dialogs, System.UITypes, System.IOUtils,
+uses System.Classes, System.SysUtils, System.Generics.Collections,
+  Vcl.Forms, Vcl.Graphics, Vcl.Dialogs,
+  System.UITypes, System.IOUtils, System.StrUtils, System.Math,
   System.Net.HttpClient, System.JSON, Vcl.ExtActns, System.Zip,
-  UFrm, UCommon;
+  UFrm, UFrmOldFiles, UCommon;
 
 const URL_GITHUB = 'https://api.github.com/repos/%s/releases/latest';
 
 type
+  TOldFile = class
+  private
+    Path: string;
+    Folder: Boolean;
+  end;
+  TOldFiles = class(TObjectList<TOldFile>)
+  private
+    procedure Add(const Path: string; Folder: Boolean);
+  end;
+
   TThCheck = class(TThread)
+  public
+    constructor Create(Suspended: Boolean);
+    destructor Destroy; override;
   protected
     procedure Execute; override;
   private
     Repository: string;
     CurrentVersion: string;
 
+    OldFiles: TOldFiles;
+
     procedure Check;
+    function ConfirmOldFiles: Boolean;
     procedure Download(const URL: string);
     procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
-    procedure CleanFolder;
+    procedure GetOldFiles;
+    procedure DeleteOldFiles;
   end;
+
+constructor TThCheck.Create(Suspended: Boolean);
+begin
+  inherited;
+  OldFiles := TOldFiles.Create;
+end;
+
+destructor TThCheck.Destroy;
+begin
+  OldFiles.Free;
+  inherited;
+end;
 
 procedure TThCheck.Execute;
 begin
@@ -93,15 +123,93 @@ begin
       begin
         Confirm := MessageDlg(Format(
           'There is a new version "%s" of the component available at GitHub.'+
-          ' Do you want to update it automatically?'+#13+#13+
-          '*** Warning: All content in the component''s folder and subfolders will be deleted.',
+          ' Do you want to update it automatically?',
           [tag_version]), mtInformation, mbYesNo, 0) = mrYes;
       end);
 
-    if Confirm then
+    if Confirm and ConfirmOldFiles then
       Download(tag_zip);
+
   end else
     Log('Your version is already updated.', True, clGreen);
+end;
+
+function TThCheck.ConfirmOldFiles: Boolean;
+var
+  Confirm: Boolean;
+begin
+  GetOldFiles;
+  if OldFiles.Count=0 then Exit(True); //nothing to delete, auto confirm
+
+  Synchronize(
+    procedure
+    var
+      OldFile: TOldFile;
+    begin
+      FrmOldFiles := TFrmOldFiles.Create(Application);
+      for OldFile in OldFiles do
+        with FrmOldFiles.LFiles.Items.Add do
+        begin
+          Caption := ExtractFileName(OldFile.Path);
+          ImageIndex := IfThen(OldFile.Folder, 1, 0);
+        end;
+      Confirm := FrmOldFiles.ShowModal = mrOk;
+      FrmOldFiles.Free;
+    end);
+
+  if Confirm then
+  begin
+    DeleteOldFiles;
+    Result := True;
+  end else
+    Result := False;
+end;
+
+procedure TThCheck.GetOldFiles;
+var
+  Path, FileName: string;
+begin
+  //directories
+  for Path in TDirectory.GetDirectories(AppDir) do
+  begin
+    {$WARN SYMBOL_PLATFORM OFF}
+    if TFileAttribute.faHidden in TDirectory.GetAttributes(Path) then Continue; //ignore hidden folders (like .git)
+    {$WARN SYMBOL_PLATFORM ON}
+
+    OldFiles.Add(Path, True);
+  end;
+
+  //files
+  for Path in TDirectory.GetFiles(AppDir) do
+  begin
+    FileName := ExtractFileName(Path);
+    //skip self EXE and CompInstall.ini
+    if SameText(FileName, ExtractFileName(ParamStr(0))) or
+      SameText(FileName, INI_FILE_NAME) then Continue;
+
+    OldFiles.Add(Path, False);
+  end;
+end;
+
+procedure TThCheck.DeleteOldFiles;
+var
+  OldFile: TOldFile;
+begin
+  Log('Cleaning component folder...');
+
+  for OldFile in OldFiles do
+  begin
+    try
+      if OldFile.Folder then
+        TDirectory.Delete(OldFile.Path, True)
+      else
+        TFile.Delete(OldFile.Path);
+    except
+      on E: Exception do
+        raise Exception.CreateFmt('Could not delete %s %s: %s',
+          [IfThen(OldFile.Folder, 'folder', 'file'), OldFile.Path, E.Message]);
+    end;
+  end;
 end;
 
 procedure TThCheck.Download(const URL: string);
@@ -111,9 +219,6 @@ var
   Z: TZipFile;
   ZPath, ZFile, ZFileNormalized: string;
 begin
-  Log('Cleaning component folder...');
-  CleanFolder;
-
   Log('Downloading new version...');
 
   TmpFile := TPath.GetTempFileName;
@@ -157,43 +262,13 @@ begin
   Log('Update complete!', True, clGreen);
 end;
 
-procedure TThCheck.CleanFolder;
-var
-  Path, FileName: string;
-begin
-  for Path in TDirectory.GetFiles(AppDir) do
-  begin
-    FileName := ExtractFileName(Path);
-    //skip self EXE and CompInstall.ini
-    if SameText(FileName, ExtractFileName(ParamStr(0))) or
-      SameText(FileName, INI_FILE_NAME) then Continue;
-
-    try
-      TFile.Delete(Path);
-    except
-      raise Exception.CreateFmt('Could not delete file %s', [Path]);
-    end;
-  end;
-
-  for Path in TDirectory.GetDirectories(AppDir) do
-  begin
-    {$WARN SYMBOL_PLATFORM OFF}
-    if TFileAttribute.faHidden in TDirectory.GetAttributes(Path) then Continue; //ignore hidden folders (like .git)
-    {$WARN SYMBOL_PLATFORM ON}
-
-    try
-      TDirectory.Delete(Path, True);
-    except
-      raise Exception.CreateFmt('Could not delete folder %s', [Path]);
-    end;
-  end;
-end;
+//
 
 procedure CheckGitHubUpdate(const Repository, CurrentVersion: string);
 var
   C: TThCheck;
 begin
-  if Repository.IsEmpty then Exit;  
+  if Repository.IsEmpty then Exit;
 
   Frm.SetButtons(False);
 
@@ -201,6 +276,18 @@ begin
   C.Repository := Repository;
   C.CurrentVersion := CurrentVersion;
   C.Start;
+end;
+
+{ TOldFiles }
+
+procedure TOldFiles.Add(const Path: string; Folder: Boolean);
+var
+  OldFile: TOldFile;
+begin
+  OldFile := TOldFile.Create;
+  OldFile.Path := Path;
+  OldFile.Folder := Folder;
+  inherited Add(OldFile);
 end;
 
 end.

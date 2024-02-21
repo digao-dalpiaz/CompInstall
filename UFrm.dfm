@@ -7,7 +7,7 @@ object Frm: TFrm
   ClientHeight = 589
   ClientWidth = 874
   Color = clBtnFace
-  Font.Charset = ANSI_CHARSET
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Segoe UI'

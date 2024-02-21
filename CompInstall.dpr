@@ -8,7 +8,8 @@ uses
   UDelphiVersionCombo in 'UDelphiVersionCombo.pas',
   UFrm in 'UFrm.pas' {Frm},
   UGitHub in 'UGitHub.pas',
-  UProcess in 'UProcess.pas';
+  UProcess in 'UProcess.pas',
+  UFrmOldFiles in 'UFrmOldFiles.pas' {FrmOldFiles};
 
 {$R *.res}
 

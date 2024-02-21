@@ -111,6 +111,10 @@
         </DCCReference>
         <DCCReference Include="UGitHub.pas"/>
         <DCCReference Include="UProcess.pas"/>
+        <DCCReference Include="UFrmOldFiles.pas">
+            <Form>FrmOldFiles</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
