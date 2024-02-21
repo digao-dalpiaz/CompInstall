@@ -1,4 +1,3 @@
 *.identcache
 *.local
-*.stat
 /Win32
