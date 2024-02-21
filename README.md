@@ -20,6 +20,7 @@
   - New ini properties: IniVersion, OutputPath and Package\Path
   - PublishFiles now supports sub-folder.
   - Clear all files and sub-folders when updating from GitHub.
+  - Detect unsupported compiler.
 
 <details>
   <summary>Click here to view the entire changelog</summary>
