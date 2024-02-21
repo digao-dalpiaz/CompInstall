@@ -18,6 +18,8 @@ type
 
     MSBuildExe: string;
 
+    CompilerNotSupportBuilding: Boolean;
+
     procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 
     procedure FindMSBuild;
@@ -29,6 +31,7 @@ type
     procedure OnLine(const Text: string);
 
     function GetOutputPath(const aPlatform: string): string;
+    function GetBplDirectory: string;
   end;
 
 implementation
@@ -36,6 +39,9 @@ implementation
 uses System.Win.Registry, Winapi.Windows, System.SysUtils,
   UCommon, UCmdExecBuffer, System.IOUtils, Winapi.ShlObj,
   UFrm;
+
+const
+  COMPILING_ERROR_VERSION_NOT_SUPORTED = 'This version of the product does not support command line compiling';
 
 constructor TProcess.Create(D: TDefinitions;
       const InternalDelphiVersionKey: string; Flag64bit: Boolean);
@@ -151,6 +157,9 @@ begin
 
     if C.ExitCode<>0 then
       raise Exception.CreateFmt('Error compiling package %s (Exit Code %d)', [P.Name, C.ExitCode]);
+
+    if CompilerNotSupportBuilding then
+      raise Exception.Create(COMPILING_ERROR_VERSION_NOT_SUPORTED);
   finally
     C.Free;
   end;
@@ -165,6 +174,8 @@ procedure TProcess.OnLine(const Text: string);
 begin
   //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
+
+  if Text.Contains(COMPILING_ERROR_VERSION_NOT_SUPORTED) then CompilerNotSupportBuilding := True;
 end;
 
 procedure TProcess.PublishFiles(P: TPackage; const aPlatform: string);
@@ -227,14 +238,11 @@ begin
   Result := Path;
 end;
 
-procedure TProcess.RegisterBPL(const aPackage: string);
+function TProcess.GetBplDirectory: string;
 var
-  R: TRegistry;
   BplDir, PublicPrefix: string;
   FS: TFormatSettings;
 begin
-  Log('Install BPL into IDE of '+aPackage);
-
   FS := TFormatSettings.Create;
   FS.DecimalSeparator := '.';
   if StrToFloat(InternalDelphiVersionKey, FS)<=12 then //Delphi XE5 or below
@@ -246,6 +254,18 @@ begin
 
   if not DirectoryExists(BplDir) then
     raise Exception.CreateFmt('Public Delphi folder not found at: %s', [BplDir]);
+
+  Result := BplDir;
+end;
+
+procedure TProcess.RegisterBPL(const aPackage: string);
+var
+  R: TRegistry;
+  BplDir: string;
+begin
+  Log('Install BPL into IDE of '+aPackage);
+
+  BplDir := GetBplDirectory;
 
   R := TRegistry.Create;
   try
