@@ -345,7 +345,7 @@ object Frm: TFrm
     ScrollBars = ssVertical
     TabOrder = 5
   end
-  object LinkLabel1: TLinkLabel
+  object LbDigaoDalpiaz: TLinkLabel
     Left = 774
     Top = 40
     Width = 76
@@ -354,7 +354,7 @@ object Frm: TFrm
       '<a href="https://github.com/digao-dalpiaz/CompInstall">Dig'#227'o Dal' +
       'piaz</a>'
     TabOrder = 2
-    OnLinkClick = LinkLabel1LinkClick
+    OnLinkClick = LbDigaoDalpiazLinkClick
   end
   object EdCompVersion: TEdit
     Left = 528

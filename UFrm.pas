@@ -29,14 +29,14 @@ type
     BtnExit: TBitBtn;
     M: TRichEdit;
     LbVersion: TLabel;
-    LinkLabel1: TLinkLabel;
+    LbDigaoDalpiaz: TLinkLabel;
     LbComponentVersion: TLabel;
     EdCompVersion: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BtnExitClick(Sender: TObject);
     procedure BtnInstallClick(Sender: TObject);
-    procedure LinkLabel1LinkClick(Sender: TObject; const Link: string;
+    procedure LbDigaoDalpiazLinkClick(Sender: TObject; const Link: string;
       LinkType: TSysLinkType);
     procedure FormShow(Sender: TObject);
   private
@@ -123,7 +123,7 @@ begin
     CheckGitHubUpdate(D.GitHubRepository, D.CompVersion);
 end;
 
-procedure TFrm.LinkLabel1LinkClick(Sender: TObject; const Link: string;
+procedure TFrm.LbDigaoDalpiazLinkClick(Sender: TObject; const Link: string;
   LinkType: TSysLinkType);
 begin
   ShellExecute(0, '', PChar(Link), '', '', SW_SHOWNORMAL);
