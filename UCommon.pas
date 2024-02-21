@@ -4,6 +4,8 @@ interface
 
 const BDS_KEY = 'Software\Embarcadero\BDS';
 
+const INI_FILE_NAME = 'CompInstall.ini';
+
 var AppDir: string;
 
 function HasInList(const Item, List: string): Boolean;
@@ -21,7 +23,8 @@ begin
 end;
 
 function NormalizeAndRemoveFirstDir(Path: string): string;
-var I: Integer;
+var
+  I: Integer;
 begin
   Path := Path.Replace('/', '\');
 

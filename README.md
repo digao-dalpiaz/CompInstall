@@ -2,7 +2,7 @@
 
 # Component Installer
 
-## Delphi VCL app utility to auto-install component packages into IDE.
+## Delphi app utility to auto-install component packages into IDE.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/C0C53LVFN)
 
@@ -14,12 +14,19 @@
 
 ## What's New
 
-- 09/12/2021 (Version 2.5)
+- 02/20/2024 (Version 2.6)
 
-   - Delphi 11 support.
+  - Delphi 12 support.
+  - New ini properties: IniVersion, OutputPath and Package\Path
+  - PublishFiles now supports sub-folder.
+  - Clear all files and sub-folders when updating from GitHub.
 
 <details>
   <summary>Click here to view the entire changelog</summary>
+
+- 09/12/2021 (Version 2.5)
+
+   - Delphi 11 support.
 
 - 03/25/2021 (Version 2.4)
 
@@ -81,19 +88,27 @@ Then put the **CompInstall.exe** and **CompInstall.ini** into your component pac
 
 ## CompInstall.ini structure
 
+**`[Template]` section**
+
+`IniVersion` (required) = Version of ini structure (**Current version = 2**)
+
+> If ini version is higher than current app supported version, the app will display an error message and block installation.
+
 **`[General]` section**
 
 `Name` (required) = Component name displayed at install form and registered into Delphi Packages.
 
 `Version` (required) = Component version displayed at install form and used by GitHub auto-update control (if enabled).
 
-`DelphiVersions` (required) = It's a list splited by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
+`DelphiVersions` (required) = It's a list splitted by ";" with all Delphi versions supported by the component. According to Delphi versions installed in Windows and combining with this parameter, a combobox in the install form will list all possible Delphi versions.
 
-> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
+> Supported values: 2005;2006;2007;2009;2010;XE;XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4;11;12
 
-`Packages` (required) = It's a list splited by ";" with packages to be compiled, in correct order. Just type the package name without the file extension.
+`Packages` (required) = It's a list splitted by ";" with packages to be compiled, in correct order. Just type the package name without the file extension.
 
 `AddLibrary` (optional) = 0 or 1. When 1, the path of release folders of component will be registered into Delphi library path.
+
+`OutputPath` (optional) = Relative folder where compiled files are stored (must be the same configured in package settings). You can use `{PLATFORM}` and `{CONFIG}` variables. Default value is: `{PLATFORM}\{CONFIG}` (By now, {CONFIG} is always "Release").
 
 **Package section**
 
@@ -101,17 +116,19 @@ To specify package parameters, create a section with the name of the package wit
 
 `[P_MyPackage]`
 
+`Path` (optional) = Relative folder where package file is. If blank, package must be at component root folder.
+
 `Allow64bit` (optional) = 0 or 1. When 1, specify this package to be compiled twice, with 32-bit and 64-bit versions. Remember to create this platform at Delphi Project Manager, otherwise the 64-bit compilation will fail.
 
 If any package has this option enabled, it will be display a checkbox allowing install 64-bit version of component (the checkbox starts checked by default).
 
-`PublishFiles` (optional) = It's a list splited by ";" with all files you want to copy into release folders (usually DFM form files used at runtime and resource files).
+`PublishFiles` (optional) = It's a list splitted by ";" with all files you want to copy into release folders (usually DFM form files used at runtime and resource files).
 
 `Install` (optional) = 0 or 1. When 1, this package will be installed into Delphi IDE. You need to set this option for design-time packages when you want to register components into Delphi IDE.
 
->Note: The app compiles your component using **Release** target. This means all packages need to be configured at default output folder (Win32\Release and Win64\Release).
+> Note: The app compiles your component using always **Release** target.
 
-**GitHub section**
+**`[GitHub]` section**
 
 `Repository` (optional) = Allows you to specify a GitHub repository (syntax: `GitHub account`/`Repository name`), so when app starts, it will check for component update using GitHub API, reading the latest existing release and comparing its version with current version. If the versions don't match, a dialog will be displayed asking if you want to auto-update files.
 
@@ -120,16 +137,21 @@ If any package has this option enabled, it will be display a checkbox allowing i
 In this example, there are two Delphi packages (DamPackage and DamDesignPackage). The design-time package (DamDesignPackage) is configured to install into Delphi IDE. The runtime package (DamPackage) is configured to copy dfm form file and resource file to release folder.
 
 ```
+[Template]
+IniVersion=2
+
 [General]
 Name=Dam Component
 Version=1.0
 DelphiVersions=XE2;XE3;XE4;XE5;XE6;XE7;XE8;10;10.1;10.2;10.3;10.4
 Packages=DamPackage;DamDesignPackage
 AddLibrary=1
+OutputPath=Library\{PLATFORM}\{CONFIG}
 
 [P_DamPackage]
+Path=Source\Code
 Allow64bit=1
-PublishFiles=DamDialog.dfm;Dam_Resource.res
+PublishFiles=DamDialog.dfm;Resources\Dam_Resource.res
 
 [P_DamDesignPackage]
 Install=1

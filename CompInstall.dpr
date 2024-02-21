@@ -2,14 +2,14 @@ program CompInstall;
 
 uses
   Vcl.Forms,
-  System.SysUtils,
-  UFrm in 'UFrm.pas' {Frm},
   UCmdExecBuffer in 'UCmdExecBuffer.pas',
+  UCommon in 'UCommon.pas',
   UDefinitions in 'UDefinitions.pas',
+  UDelphiVersionCombo in 'UDelphiVersionCombo.pas',
+  UFrm in 'UFrm.pas' {Frm},
   UGitHub in 'UGitHub.pas',
   UProcess in 'UProcess.pas',
-  UCommon in 'UCommon.pas',
-  UDelphiVersionCombo in 'UDelphiVersionCombo.pas';
+  UFrmOldFiles in 'UFrmOldFiles.pas' {FrmOldFiles};
 
 {$R *.res}
 

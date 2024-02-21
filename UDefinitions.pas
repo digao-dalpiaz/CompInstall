@@ -4,10 +4,13 @@ interface
 
 uses System.Generics.Collections, System.Classes;
 
+const DEFINITIONS_VERSION = 2; //current definitions template
+
 type
   TPackage = class
   public
     Name: string;
+    Path: string;
     Allow64bit: Boolean;
     PublishFiles: TStringList;
     Install: Boolean;
@@ -19,10 +22,12 @@ type
 
   TDefinitions = class
   public
+    IniVersion: Integer;
     CompName: string;
     CompVersion: string;
     DelphiVersions: string;
     AddLibrary: Boolean;
+    OutputPath: string;
     Packages: TPackages;
 
     GitHubRepository: string;
@@ -46,7 +51,8 @@ begin
 end;
 
 procedure TDefinitions.LoadIniFile(const aFile: string);
-var Ini: TIniFile;
+var
+  Ini: TIniFile;
   A, Sec: string;
   S: TStringList;
   P: TPackage;
@@ -56,6 +62,10 @@ begin
 
   Ini := TIniFile.Create(aFile);
   try
+    IniVersion := Ini.ReadInteger('Template', 'IniVersion', 1);
+    if IniVersion>DEFINITIONS_VERSION then
+      raise Exception.Create('Unsupported ini version. You probably need to update Component Installer!');
+
     CompName := Ini.ReadString('General', 'Name', '');
     if CompName='' then
       raise Exception.Create('Component name not specifyed at ini file');
@@ -69,6 +79,7 @@ begin
       raise Exception.Create('No Delphi version specifyed at ini file');
 
     AddLibrary := Ini.ReadBool('General', 'AddLibrary', False);
+    OutputPath := Ini.ReadString('General', 'OutputPath', '');
 
     S := TStringList.Create;
     try
@@ -84,6 +95,7 @@ begin
         Sec := 'P_'+A;
 
         P.Name := A;
+        P.Path := Ini.ReadString(Sec, 'Path', '');
         P.Allow64bit := Ini.ReadBool(Sec, 'Allow64bit', False);
         P.PublishFiles.Text := PVToEnter( Ini.ReadString(Sec, 'PublishFiles', '') );
         P.Install := Ini.ReadBool(Sec, 'Install', False);
@@ -115,7 +127,8 @@ begin
 end;
 
 function TDefinitions.HasAny64bit: Boolean;
-var P: TPackage;
+var
+  P: TPackage;
 begin
   Result := False;
 

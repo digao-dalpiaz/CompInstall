@@ -4,20 +4,18 @@ object Frm: TFrm
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
   Caption = 'Component Installer'
-  ClientHeight = 542
-  ClientWidth = 729
+  ClientHeight = 589
+  ClientWidth = 874
   Color = clBtnFace
-  Font.Charset = ANSI_CHARSET
+  Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Segoe UI'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
-  PixelsPerInch = 96
   TextHeight = 13
   object LbComponentName: TLabel
     Left = 16
@@ -41,11 +39,11 @@ object Frm: TFrm
     Caption = 'Installation Log'
   end
   object LbVersion: TLabel
-    Left = 592
+    Left = 726
     Top = 16
     Width = 123
     Height = 13
-    Caption = 'Component Installer 2.5'
+    Caption = 'Component Installer 2.6'
     Font.Charset = ANSI_CHARSET
     Font.Color = clGreen
     Font.Height = -11
@@ -54,7 +52,7 @@ object Frm: TFrm
     ParentFont = False
   end
   object LbComponentVersion: TLabel
-    Left = 456
+    Left = 528
     Top = 16
     Width = 41
     Height = 13
@@ -63,7 +61,7 @@ object Frm: TFrm
   object EdCompName: TEdit
     Left = 16
     Top = 32
-    Width = 433
+    Width = 505
     Height = 21
     TabStop = False
     Color = clBtnFace
@@ -79,24 +77,24 @@ object Frm: TFrm
   object EdDV: TComboBox
     Left = 16
     Top = 80
-    Width = 201
+    Width = 225
     Height = 21
     Style = csDropDownList
-    TabOrder = 2
+    TabOrder = 3
   end
   object Ck64bit: TCheckBox
-    Left = 248
+    Left = 272
     Top = 80
     Width = 137
     Height = 17
     Caption = 'Install 64-bit support'
     Checked = True
     State = cbChecked
-    TabOrder = 3
+    TabOrder = 4
   end
   object BtnInstall: TBitBtn
-    Left = 256
-    Top = 496
+    Left = 320
+    Top = 544
     Width = 105
     Height = 33
     Caption = 'Install'
@@ -212,12 +210,12 @@ object Frm: TFrm
       FFC080FFC080FF929596899396819195788F95708C95708C95788F9581919589
       9396929596C080FFC080FFC080FFC080FFC080FFC080FFC080FF}
     NumGlyphs = 2
-    TabOrder = 5
+    TabOrder = 6
     OnClick = BtnInstallClick
   end
   object BtnExit: TBitBtn
-    Left = 368
-    Top = 496
+    Left = 432
+    Top = 544
     Width = 105
     Height = 33
     Caption = 'Exit'
@@ -333,40 +331,39 @@ object Frm: TFrm
       78807A78807A78807A78807A78807A78807A78807A78807A78807A78807A7888
       8483C080FFC080FFC080FFC080FFC080FFC080FFC080FFC080FF}
     NumGlyphs = 2
-    TabOrder = 6
+    TabOrder = 7
     OnClick = BtnExitClick
   end
   object M: TRichEdit
     Left = 16
     Top = 128
-    Width = 697
-    Height = 361
+    Width = 841
+    Height = 410
     TabStop = False
     HideScrollBars = False
     ReadOnly = True
     ScrollBars = ssVertical
-    TabOrder = 4
-    Zoom = 100
+    TabOrder = 5
   end
-  object LinkLabel1: TLinkLabel
-    Left = 640
+  object LbDigaoDalpiaz: TLinkLabel
+    Left = 774
     Top = 40
     Width = 76
     Height = 17
     Caption = 
       '<a href="https://github.com/digao-dalpiaz/CompInstall">Dig'#227'o Dal' +
       'piaz</a>'
-    TabOrder = 1
-    OnLinkClick = LinkLabel1LinkClick
+    TabOrder = 2
+    OnLinkClick = LbDigaoDalpiazLinkClick
   end
   object EdCompVersion: TEdit
-    Left = 456
+    Left = 528
     Top = 32
-    Width = 121
+    Width = 161
     Height = 21
     TabStop = False
     Color = clBtnFace
     ReadOnly = True
-    TabOrder = 7
+    TabOrder = 1
   end
 end

@@ -18,6 +18,8 @@ type
 
     MSBuildExe: string;
 
+    CompilerNotSupportBuilding: Boolean;
+
     procedure Log(const A: string; bBold: Boolean = True; Color: TColor = clBlack);
 
     procedure FindMSBuild;
@@ -27,6 +29,9 @@ type
     procedure PublishFiles(P: TPackage; const aPlatform: string);
     procedure RegisterBPL(const aPackage: string);
     procedure OnLine(const Text: string);
+
+    function GetOutputPath(const aPlatform: string): string;
+    function GetBplDirectory: string;
   end;
 
 implementation
@@ -34,6 +39,9 @@ implementation
 uses System.Win.Registry, Winapi.Windows, System.SysUtils,
   UCommon, UCmdExecBuffer, System.IOUtils, Winapi.ShlObj,
   UFrm;
+
+const
+  COMPILING_ERROR_VERSION_NOT_SUPORTED = 'This version of the product does not support command line compiling';
 
 constructor TProcess.Create(D: TDefinitions;
       const InternalDelphiVersionKey: string; Flag64bit: Boolean);
@@ -80,7 +88,8 @@ begin
 end;
 
 procedure TProcess.Compile;
-var R: TRegistry;
+var
+  R: TRegistry;
   aRootDir: string;
   aBat: string;
 
@@ -124,9 +133,14 @@ begin
 end;
 
 procedure TProcess.CompilePackage(P: TPackage; const aBat, aPlatform: string);
-var C: TCmdExecBuffer;
+var
+  C: TCmdExecBuffer;
+  aPath, aFile: string;
 begin
   Log('Compile package '+P.Name+' ('+aPlatform+')');
+
+  aPath := TPath.Combine(AppDir, P.Path); //if P.Path blank, Combine ignores automatically
+  aFile := TPath.Combine(aPath, P.Name);
 
   C := TCmdExecBuffer.Create;
   try
@@ -134,15 +148,18 @@ begin
 
     C.CommandLine :=
       Format('""%s" & "%s" "%s.dproj" /t:build /p:config=Release /p:platform=%s"',
-      [aBat, MSBuildExe, AppDir+P.Name, aPlatform]);
+      [aBat, MSBuildExe, aFile, aPlatform]);
 
-    C.WorkDir := AppDir;
+    C.WorkDir := aPath;
 
     if not C.Exec then
       raise Exception.Create('Could not execute MSBUILD');
 
     if C.ExitCode<>0 then
       raise Exception.CreateFmt('Error compiling package %s (Exit Code %d)', [P.Name, C.ExitCode]);
+
+    if CompilerNotSupportBuilding then
+      raise Exception.Create(COMPILING_ERROR_VERSION_NOT_SUPORTED);
   finally
     C.Free;
   end;
@@ -157,17 +174,20 @@ procedure TProcess.OnLine(const Text: string);
 begin
   //event for command line execution (line-by-line)
   Log(TrimRight(Text), False);
+
+  if Text.Contains(COMPILING_ERROR_VERSION_NOT_SUPORTED) then CompilerNotSupportBuilding := True;
 end;
 
 procedure TProcess.PublishFiles(P: TPackage; const aPlatform: string);
-var A, aSource, aDest: string;
+var
+  RelativeFile, aSource, aDest: string;
 begin
-  for A in P.PublishFiles do
+  for RelativeFile in P.PublishFiles do
   begin
-    aSource := AppDir+A;
-    aDest := AppDir+aPlatform+'\Release\'+A;
+    aSource := AppDir+RelativeFile;
+    aDest := GetOutputPath(aPlatform)+'\'+ExtractFileName(RelativeFile);
 
-    Log(Format('Copy file %s to %s', [A{aSource}, aDest]), False, clPurple);
+    Log(Format('Copy file %s to %s', [RelativeFile{aSource}, aDest]), False, clPurple);
     TFile.Copy(aSource, aDest, True);
   end;
 end;
@@ -175,14 +195,15 @@ end;
 procedure TProcess.AddLibrary;
 
   procedure AddKey(const aPlatform: string);
-  var Key, A, Dir: string;
+  var
+    Key, A, Dir: string;
     R: TRegistry;
   const SEARCH_KEY = 'Search Path';
   begin
     Log('Add library path to '+aPlatform);
 
     Key := BDS_KEY+'\'+InternalDelphiVersionKey+'\Library\'+aPlatform;
-    Dir := AppDir+aPlatform+'\Release';
+    Dir := GetOutputPath(aPlatform);
 
     R := TRegistry.Create;
     try
@@ -208,7 +229,8 @@ begin
 end;
 
 function GetPublicDocs: string;
-var Path: array[0..MAX_PATH] of Char;
+var
+  Path: array[0..MAX_PATH] of Char;
 begin
   if not ShGetSpecialFolderPath(0, Path, CSIDL_COMMON_DOCUMENTS, False) then
     raise Exception.Create('Could not find Public Documents folder location') ;
@@ -216,13 +238,11 @@ begin
   Result := Path;
 end;
 
-procedure TProcess.RegisterBPL(const aPackage: string);
-var R: TRegistry;
+function TProcess.GetBplDirectory: string;
+var
   BplDir, PublicPrefix: string;
   FS: TFormatSettings;
 begin
-  Log('Install BPL into IDE of '+aPackage);
-
   FS := TFormatSettings.Create;
   FS.DecimalSeparator := '.';
   if StrToFloat(InternalDelphiVersionKey, FS)<=12 then //Delphi XE5 or below
@@ -234,6 +254,18 @@ begin
 
   if not DirectoryExists(BplDir) then
     raise Exception.CreateFmt('Public Delphi folder not found at: %s', [BplDir]);
+
+  Result := BplDir;
+end;
+
+procedure TProcess.RegisterBPL(const aPackage: string);
+var
+  R: TRegistry;
+  BplDir: string;
+begin
+  Log('Install BPL into IDE of '+aPackage);
+
+  BplDir := GetBplDirectory;
 
   R := TRegistry.Create;
   try
@@ -250,12 +282,13 @@ begin
 end;
 
 procedure TProcess.FindMSBuild;
-var R: TRegistry;
+const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
+var
+  R: TRegistry;
   S: TStringList;
   I: Integer;
   Dir, aFile: string;
   Found: Boolean;
-const TOOLS_KEY = 'Software\Microsoft\MSBUILD\ToolsVersions';
 begin
   R := TRegistry.Create;
   try
@@ -308,6 +341,19 @@ begin
     raise Exception.Create('MSBUILD not found in any .NET Framework version');
 
   MSBuildExe := aFile;
+end;
+
+function TProcess.GetOutputPath(const aPlatform: string): string;
+begin
+  if not D.OutputPath.IsEmpty then
+    Result := D.OutputPath
+  else
+    Result := '{PLATFORM}\{CONFIG}';
+
+  Result := Result.Replace('{PLATFORM}', aPlatform);
+  Result := Result.Replace('{CONFIG}', 'Release');
+
+  Result := AppDir + Result;
 end;
 
 end.
